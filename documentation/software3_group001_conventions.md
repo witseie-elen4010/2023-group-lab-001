@@ -2,7 +2,7 @@ The following conventions are used in the development of CONSULTA:
 
 1) Front end languages used: Javascript, Bootstrap
 
-2) Back end languages used: SQL in SQL Server
+2) Back end languages used: SQL in MySQL
 
 3) Coding style: code will be written in a defensive manner, following best practices for the languages used.
 		 All Javascript code will be formatted using the StandardJS conventions and its associated linter as a VSCode plugin.
