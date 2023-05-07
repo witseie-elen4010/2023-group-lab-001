@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student Consultation Calendar</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .calendar {
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar .month {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .calendar .day {
+            width: 14.28%;
+            text-align: center;
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 5px;
+        }
+
+        .calendar .today {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="calendar">
+            <h2 class="month"></h2>
+            <div class="row"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Get current date
+        const currentDate = new Date();
+        const currentDay = currentDate.getDate();
+
+        // Get month and year
+        const options = { month: 'long', year: 'numeric' };
+        const monthYearString = currentDate.toLocaleDateString('en-US', options);
+
+        // Set month and year in the calendar header
+        document.querySelector('.month').textContent = monthYearString;
+
+        // Generate calendar days
+        const calendarDays = document.querySelector('.row');
+
+        for (let day = 1; day <= 31; day++) {
+            const calendarDay = document.createElement('div');
+            calendarDay.classList.add('col-2', 'day');
+            calendarDay.textContent = day;
+
+            if (day === currentDay) {
+                calendarDay.classList.add('today');
+            }
+
+            calendarDays.appendChild(calendarDay);
+        }
+    </script>
+</body>
+
+</html>
