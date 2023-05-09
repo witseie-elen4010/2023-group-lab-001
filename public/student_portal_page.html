@@ -1,1 +1,138 @@
-<html></html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Student Portal</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="student_portal.css">
+</head>
+
+<body>
+    <div class ="container">
+        <img class="img-fluid" src=".\resources\logo_cropped.jpeg" alt="Consulta">
+
+    </div>
+
+    <header class="bg-primary text-white">
+        <div class="container">
+            <h1 class="my-3">Student Portal</h1>
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#book-consultation">Book Consultation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#consultation-view">View Consultations</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container my-3">
+        <h2 id="book-consultation">Book a Consultation</h2>
+        <form>
+            <div class="form-group">
+                <label for="lecturer">Choose a Lecturer:</label>
+                <select class="form-control" id="lecturer" name="lecturer">
+                    <option value="Dr. Jane Doe">Dr. Jane Doe</option>
+                    <option value="Prof. John Smith">Prof. John Smith</option>
+                    <option value="Dr. Bob Johnson">Dr. Bob Johnson</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Choose a Date:</label>
+                <input class="form-control" type="date" id="date" name="date">
+            </div>
+
+            <div class="form-group">
+                <label for="time">Choose a Time:</label>
+                <input class="form-control" type="time" id="time" name="time">
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea class="form-control" id="message" name="message"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Book Consultation</button>
+        </form>
+    
+
+        <div class="container">
+            <div class="calendar">
+                <h2 id="consultation-view">View Consultations:</h2>
+                <h3 class="month">May</h3>
+                <div class="row"></div>
+            </div>
+        </div>
+        <body>
+            <div class="container">
+                <h1>Upcoming Consultations</h1>
+                <ul class="list-group">
+                    <li class="list-group-item consultation-item" data-timestamp="2023-05-10T09:00:00">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>Consultation 1</h4>
+                                <p>Dr Jane</p>
+                                <p>Date: May 10, 2023</p>
+                                <p>Time: 9:00 AM</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <p>Days until consultation: <span class="days-until"></span></p>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-danger cancel-btn">Cancel</button>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item consultation-item" data-timestamp="2023-05-15T14:30:00">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>Consultation 2</h4>
+                                <p>Date: May 15, 2023</p>
+                                <p>Dr John</p>
+                                <p>Time: 2:30 PM</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <p>Days until consultation: <span class="days-until"></span></p>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-danger cancel-btn">Cancel</button>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Add more consultation items as needed -->
+                </ul>
+            </div>
+        </body>
+    </main>
+
+    <footer class="bg-light py-3">
+        <div class="container">
+            <p>&copy; Consulta</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="student_portal_page.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</body>
+
+</html>
