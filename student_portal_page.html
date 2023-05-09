@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     
-
     <title>Student Portal</title>
 
     <!-- Bootstrap CSS -->
@@ -72,6 +71,38 @@
                 <div class="row"></div>
             </div>
         </div>
+        <body>
+            <div class="container">
+                <h1>Upcoming Consultations</h1>
+                <ul class="list-group">
+                    <li class="list-group-item consultation-item" data-timestamp="2023-05-10T09:00:00">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>Consultation 1</h4>
+                                <p>Date: May 10, 2023</p>
+                                <p>Time: 9:00 AM</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p>Days until consultation: <span class="days-until"></span></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item consultation-item" data-timestamp="2023-05-15T14:30:00">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>Consultation 2</h4>
+                                <p>Date: May 15, 2023</p>
+                                <p>Time: 2:30 PM</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p>Days until consultation: <span class="days-until"></span></p>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Add more consultation items as needed -->
+                </ul>
+            </div>
+        </body>
     </main>
 
     <footer class="bg-light py-3">
