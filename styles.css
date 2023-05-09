@@ -35,3 +35,10 @@ body {
 .calendar .today {
     background-color: #0056b3;
 }
+
+.image-container {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
