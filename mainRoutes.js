@@ -13,7 +13,7 @@ mainRouter.get('/signup_login', function (req, res) {
 });
 
 mainRouter.get('/dashboard', function (req, res) {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'public', 'lecturer_dashboard.html'));
 });
 
 mainRouter.get('/student_portal_page', function (req, res) {
