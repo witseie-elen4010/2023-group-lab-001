@@ -1,14 +1,12 @@
 {
   "name": "2023-group-lab-001-josh",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
-  "scripts": {
-
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "4.18.2"
-  }
+  },
+  "description": ""
 }
