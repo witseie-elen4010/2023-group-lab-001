@@ -8,9 +8,48 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="student_portal.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .calendar {
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar .month {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .calendar .day {
+            width: 14.28%;
+            text-align: center;
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 5px;
+        }
+
+        .calendar .today {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
@@ -131,8 +170,7 @@
     <!-- Custom JS -->
     <script src="student_portal_page.js"></script>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    
 </body>
 
 </html>
