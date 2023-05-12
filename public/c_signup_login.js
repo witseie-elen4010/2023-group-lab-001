@@ -16,5 +16,21 @@ document.getElementById("login-form").addEventListener("submit", (e) => {
   const password = document.getElementById("login-password").value;
 
   // Login process
-  console.log(`User logged in: ${username}, ${password}`);
+  //Type of http method = POST as opposed to GET(request type)
+  $.ajax({
+    type: "POST",    
+    contentType: "application/json", //header property of http request, which tells the server what type of data to 
+    //expect in the BODY of the POST message (standard is plaintext)
+    data: JSON.stringify({ userName: username, password: password }), //data sent (converted to JSON)
+    url: "./login" //URL that the POST is sent to
+  }).done(function (res) {
+    if(res.status === 'Valid')
+    {
+      window.location.href = res.href;
+    }
+    else
+    {
+      alert('Invalid login')
+    }
+  });
 });
