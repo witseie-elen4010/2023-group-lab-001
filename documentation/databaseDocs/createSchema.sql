@@ -2,9 +2,13 @@ CREATE TABLE `person` (
   `Id` int unsigned NOT NULL AUTO_INCREMENT,
   `Name` varchar(45) NOT NULL,
   `Role` varchar(45) NOT NULL,
+  `Username` varchar(45) NOT NULL,
+  `Password` varchar(45) NOT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `personId_UNIQUE` (`Id`)
+  UNIQUE KEY `personId_UNIQUE` (`Id`),
+  UNIQUE KEY `Username_UNIQUE` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
 
 CREATE TABLE `consulta_db`.`event` (
   `Id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
