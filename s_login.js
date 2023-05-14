@@ -1,32 +1,29 @@
 const conn = require('./db_connection');
 
-async function checkCredentials(username,password){   
-   const results = await conn.promise().query(`SELECT * FROM person WHERE Username = '${username}' AND Password = '${password}'`)
-   
-   if(results[0].length === 1)
-   {
-      //Just for testing purposes
-      console.log(`RESULTS: ${JSON.stringify(results[0])}`)
+async function checkCredentials(email, password) {
+   //Use prepared statements to sanitize inputs to protect from SQL injection attacks
+   const [results] = await conn.promise().query("SELECT * FROM person WHERE Email = ? AND Password = ?", [email, password]);
 
-      if(results[0][0].Role === 'student')
-      {
 
-         return {href: './student_portal_page', status: 'Valid'};
-         
+   // Check if any results were returned
+   if (results.length > 0) {
+      // Get the first result
+      const user = results[0];
+
+      let redirectUrl;
+      if (user.Role === 'student') {
+         redirectUrl = './student_portal_page';
+         return { href: redirectUrl, status: 'Valid' };
+      } else if (user.Role === 'teacher') {
+         redirectUrl = './lecturer_dashboard';
+         return { href: redirectUrl, status: 'Valid' };
       }
-      else
-      {
-         return {href: './dashboard', status: 'Valid'};
-      }
-
-      
-      
-   }
-   else
-   {
-      return{href: './signup_login', status: 'Invalid'};
    }
 
+   // If no results were returned or if the role did not match either 'student' or 'teacher'
+   return { status: 'Invalid', message: 'Invalid Login' };
 }
 
-module.exports = {checkCredentials};
+
+
+module.exports = { checkCredentials };

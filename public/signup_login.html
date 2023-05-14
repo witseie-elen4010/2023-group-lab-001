@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up / Login</title>
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -15,22 +16,25 @@
             width: 400px;
             margin-top: -100px;
         }
+
         h1 {
             margin-top: -150px;
             margin-bottom: 50px;
         }
+
         h2 {
             margin-top: 20px;
             margin-bottom: 20px;
         }
+
         .container {
-        max-width: 1500px; /* Adjust this value to your desired width */
-        margin: 0 auto;
+            max-width: 1500px;
+            /* Adjust this value to your desired width */
+            margin: 0 auto;
         }
-
-
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -43,28 +47,20 @@
                 <h1 class="text-center display-4 font-weight-light">Welcome to Consulta</h1>
                 <div id="login-form" class="text-center">
                     <h2 class="font-weight-bold">Login</h3>
-                    <form>
-                        <div style="margin-bottom: 10px;">
-                            <input type="text" id="login-username" class="form-control"placeholder="Username" required>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <input type="password" id="login-password" class="form-control"placeholder="Password" required>
-                        </div>
-                        <button type="submit" id="login-btn" class="btn btn-primary">Login</button>
-                    </form>
+                        <form>
+                            <div style="margin-bottom: 10px;">
+                                <input type="text" id="login-email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <input type="password" id="login-password" class="form-control" placeholder="Password"
+                                    required>
+                            </div>
+                            <button type="submit" id="login-btn" class="btn btn-primary">Login</button>
+                        </form>
                 </div>
                 <div id="signup-form" class="text-center">
                     <h2 class="font-weight-bold">Sign Up</h2>
                     <form>
-                        <div style="margin-bottom: 10px; margin-top:20px">
-                            <input type="text" id="signup-username" class="form-control"placeholder="Username" required>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <input type="email" id="signup-email" class="form-control"placeholder="Email" required>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <input type="password" id="signup-password" class="form-control"placeholder="Password" required>
-                        </div>
                         <div class="role-selection">
                             <label>I am a: </label>
                             <input type="radio" id="student" name="role" value="student" required>
@@ -72,13 +68,31 @@
                             <input type="radio" id="teacher" name="role" value="teacher">
                             <label for="teacher">Teacher</label>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6" style="margin-bottom: 10px; margin-top:20px">
+                                <input type="text" id="signup-firstname" class="form-control" placeholder="First Name"
+                                    required>
+                            </div>
+                            <div class="col-md-6" style="margin-bottom: 10px; margin-top:20px">
+                                <input type="text" id="signup-lastname" class="form-control" placeholder="Last Name"
+                                    required>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <input type="email" id="signup-email" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <input type="password" id="signup-password" class="form-control" placeholder="Password"
+                                required>
+                        </div>
                         <button type="submit" id="signup-btn" class="btn btn-primary">Sign Up</button>
                     </form>
                 </div>
 
-                
+
             </div>
         </div>
     </div>
 </body>
+
 </html>
