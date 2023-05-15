@@ -26,6 +26,44 @@ for (let day = 1; day <= 31; day++) {
   calendarDays.appendChild(calendarDay)
 }
 
+// Generate HTML table dynamically
+function generateTable (events) {
+  const table = document.createElement('table')
+  const thead = document.createElement('thead')
+  const tbody = document.createElement('tbody')
+
+  // Create table header row
+  const headerRow = document.createElement('tr')
+  Object.keys(events[0][0]).forEach(key => {
+    const th = document.createElement('th')
+    th.textContent = key
+    headerRow.appendChild(th)
+  })
+  thead.appendChild(headerRow)
+
+  // Create table body rows
+  events[0].forEach(event => {
+    const row = document.createElement('tr')
+    Object.entries(event).forEach(([key, value]) => {
+      const cell = document.createElement('td')
+      if (typeof value === 'object') {
+        cell.textContent = value.data[0]
+      } else {
+        cell.textContent = value
+      }
+
+      row.appendChild(cell)
+    })
+    tbody.appendChild(row)
+  })
+
+  // Append thead and tbody to the table
+  table.appendChild(thead)
+  table.appendChild(tbody)
+
+  return table
+}
+
 $(document).ready(function () {
   // Function to retrieve all events from the server
   function getAllEvents () {
@@ -41,6 +79,12 @@ $(document).ready(function () {
           // Perform operations with the events data
           console.log(events)
           // Display or process the events data as needed
+
+          // Get the container element to display the table
+          const container = document.getElementById('tableContainer')
+
+          // Generate the table and append it to the container
+          container.appendChild(generateTable(events))
         } else {
           alert('Error retrieving events.')
         }
