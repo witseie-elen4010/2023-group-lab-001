@@ -25,3 +25,54 @@ for (let day = 1; day <= 31; day++) {
 
   calendarDays.appendChild(calendarDay)
 }
+
+$(document).ready(function () {
+  // Function to retrieve all events from the server
+  function getAllEvents () {
+    $.ajax({
+      type: 'GET',
+      url: '/events'
+    })
+      .done(function (res) {
+        if (res.status === 'Valid') {
+          // Access the events data from the response
+          const events = res.events
+
+          // Perform operations with the events data
+          console.log(events)
+          // Display or process the events data as needed
+        } else {
+          alert('Error retrieving events.')
+        }
+      })
+      .fail(function () {
+        console.error('Error retrieving events:(c)', error)
+        alert('Error retrieving events.')
+      })
+  }
+
+  // Call the getAllEvents function to initiate the request
+  getAllEvents()
+})
+
+// function getAllEvents () {
+//   // Event list retrieval process
+//   console.log('Hello from befor ajax')
+//   $(document).ready(function () {
+//     // Event list retrieval process
+//     $.ajax({
+//       type: 'POST',
+//       data: JSON.stringify({ userName: 'mik', password: '12345' }),
+//       url: './events'
+//     }).done(function (res) {
+//       if (res.status === 'Valid') {
+//         window.location.href = res.href
+//       } else {
+//         alert('Invalid login')
+//       }
+//     })
+//   })
+// }
+
+// // Call the getAllEvents function to initiate the request
+// getAllEvents()
