@@ -29,7 +29,11 @@ for (let day = 1; day <= 31; day++) {
 // Generate HTML table dynamically
 function generateTable (events) {
   const table = document.createElement('table')
+  table.classList.add('table', 'table-striped')
+
   const thead = document.createElement('thead')
+  thead.classList.add('thead-dark')
+
   const tbody = document.createElement('tbody')
 
   // Create table header row
@@ -46,14 +50,28 @@ function generateTable (events) {
     const row = document.createElement('tr')
     Object.entries(event).forEach(([key, value]) => {
       const cell = document.createElement('td')
-      if (typeof value === 'object') {
-        cell.textContent = value.data[0]
+
+      if (key === 'EventDate') {
+        const firstOccurrence = new Date(value)
+        const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
+        const dateString = firstOccurrence.toLocaleDateString('en-US', options)
+
+        cell.textContent = dateString
       } else {
         cell.textContent = value
       }
 
       row.appendChild(cell)
     })
+
+    // Create a button element
+    const buttonCell = document.createElement('td')
+    const bookButton = document.createElement('button')
+    bookButton.textContent = 'Book'
+    bookButton.classList.add('btn', 'btn-primary')
+    buttonCell.appendChild(bookButton)
+    row.appendChild(buttonCell)
+
     tbody.appendChild(row)
   })
 
@@ -62,6 +80,22 @@ function generateTable (events) {
   table.appendChild(tbody)
 
   return table
+}
+function sortEvents (events) {
+  events[0].sort((a, b) => {
+    const dateA = new Date(a.EventDate)
+    const dateB = new Date(b.EventDate)
+
+    // Compare the dates
+    if (dateA < dateB) return -1
+    if (dateA > dateB) return 1
+
+    // If the dates are the same, compare the times
+    const timeA = new Date(`1970-01-01T${a.EventStartTime}`)
+    const timeB = new Date(`1970-01-01T${b.EventStartTime}`)
+
+    return timeA - timeB
+  })
 }
 
 $(document).ready(function () {
@@ -79,6 +113,9 @@ $(document).ready(function () {
           // Perform operations with the events data
           console.log(events)
           // Display or process the events data as needed
+
+          // Sort events by which ones are closer
+          sortEvents(events)
 
           // Get the container element to display the table
           const container = document.getElementById('tableContainer')

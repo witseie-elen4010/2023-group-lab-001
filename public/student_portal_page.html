@@ -79,8 +79,20 @@
     </header>
 
     <main class="container my-3">
-        <h2 id="book-consultation">Book a Consultation</h2>
-        <form>
+        <div class="text-center">
+            <h2 id="book-consultation">Book a Consultation</h2>
+        </div>
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table-striped" id="tableContainer">
+                    <thead class="thead-dark"></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        
+        <!-- <form>
             <div class="form-group">
                 <label for="lecturer">Choose a Lecturer:</label>
                 <select class="form-control" id="lecturer" name="lecturer">
@@ -106,7 +118,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Book Consultation</button>
-        </form>
+        </form> -->
     
 
         <div class="container">
@@ -155,9 +167,7 @@
                     <!-- Add more consultation items as needed -->
                 </ul>
             </div>
-            <div class="container">
-                <div id="tableContainer"></div>
-            </div>
+            
             
         </body>
     </main>

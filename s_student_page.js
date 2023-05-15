@@ -52,7 +52,7 @@ const conn = require('./db_connection')
 // Function to retrieve all events from the database
 async function getAllEvents () {
   try {
-    const events = await conn.promise().query('SELECT * FROM event') // Adjust the SQL query based on your table name and structure
+    const events = await conn.promise().query('SELECT p.Name AS PersonName, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.FirstOccurrence AS EventDate, e.Duration AS EventDuration FROM event e JOIN person p ON e.PersonId = p.Id;') // Adjust the SQL query based on your table name and structure
     return events
   } catch (error) {
     console.error('Error retrieving events:', error)
