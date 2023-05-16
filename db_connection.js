@@ -9,10 +9,15 @@ var config =
     user: 'consulta_app',
     password: 'consultaAppALJE4',
     database: 'consulta_db',
+    waitForConnections: true,
+    connectionLimit:10,
+    maxIdle:10,
+    idleTimeout:60000,
+    queueLimit:0,
     port: 3306,
     ssl: {ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")}
 };
 
-const conn = new mysql.createConnection(config);
+const pool = new mysql.createPool(config);
 
-module.exports = conn;
+module.exports = pool;

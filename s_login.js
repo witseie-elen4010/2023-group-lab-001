@@ -1,9 +1,9 @@
-const conn = require('./db_connection');
+const pool = require('./db_connection');
 
 async function checkCredentials(email, password) {
-   //Use prepared statements to sanitize inputs to protect from SQL injection attacks
-   const [results] = await conn.promise().query("SELECT * FROM person WHERE Email = ? AND Password = ?", [email, password]);
 
+   //Use prepared statements to sanitize inputs to protect from SQL injection attacks
+   const [results] = await pool.promise().query("SELECT * FROM person WHERE Email = ? AND Password = ?", [email, password]);
 
    // Check if any results were returned
    if (results.length > 0) {
