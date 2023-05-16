@@ -170,25 +170,3 @@ $(document).ready(function () {
   // Call the getAllEvents function to initiate the request
   getAllEvents()
 })
-
-// function getAllEvents () {
-//   // Event list retrieval process
-//   console.log('Hello from befor ajax')
-//   $(document).ready(function () {
-//     // Event list retrieval process
-//     $.ajax({
-//       type: 'POST',
-//       data: JSON.stringify({ userName: 'mik', password: '12345' }),
-//       url: './events'
-//     }).done(function (res) {
-//       if (res.status === 'Valid') {
-//         window.location.href = res.href
-//       } else {
-//         alert('Invalid login')
-//       }
-//     })
-//   })
-// }
-
-// // Call the getAllEvents function to initiate the request
-// getAllEvents()

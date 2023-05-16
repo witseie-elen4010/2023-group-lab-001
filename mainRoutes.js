@@ -53,14 +53,4 @@ mainRouter.post('/event_booking', async function (req, res) {
   }
 })
 
-// // Route to handle login POST
-// mainRouter.post('/events', async function (req, res) {
-//   res.type('application/json')
-//   console.log('Main router for eventbooking is being executed')
-//   console.log('Username: ' + req.body.userName)
-//   // login is the MODULE we defined in login.js, and checkCredentials public by exporting it from login.js
-//   const result = await events.AddEventBookings(req.body.userName)
-//   res.send(result)
-// })
-
 module.exports = mainRouter
