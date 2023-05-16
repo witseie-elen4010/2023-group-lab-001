@@ -6,19 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lecturer Dashboard</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <!-- style for formatting -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script defer src="c_captureFields.js"></script>
     <style>
         .logo-container {
-        width: 400px;
-        margin-top: -100px;
-        margin-bottom: -150px;
+            width: 400px;
+            margin-top: -100px;
+            margin-bottom: -150px;
         }
+
         .container-fluid {
-        max-width: 1500px; /* Adjust this value to your desired width */
-        margin: 0 auto;
+            max-width: 1500px;
+            /* Adjusts value to desired width */
+            margin: 0 auto;
         }
     </style>
-    
 </head>
 
 <body> <!-- Code for visible part of document -->
@@ -59,29 +62,64 @@
             <div class="card mb-3">
                 <div class="card-header"><strong>Set Your Availability</strong></div>
                 <div class="card-body">
-                    <form>
+                    <form id="availability-form">
                         <div class="form-group">
-                            <label for="start-time">Start Time:</label>
+                            <label for="day-of-month">Select a day of the month:</label>
+                            <input type="date" class="form-control" id="day-of-month" name="day-of-month">
+                        </div>
+                        <div class="form-group">
+                            <label for="recurring">Is this availability recurring?</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="recurring" id="recurring-yes"
+                                    value="yes">
+                                <label class="form-check-label" for="recurring-yes">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="recurring" id="recurring-no"
+                                    value="no">
+                                <label class="form-check-label" for="recurring-no">No</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="end-date">End date (if recurring):</label>
+                            <input type="date" class="form-control" id="end-date" name="end-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="start-time">Start time:</label>
                             <input type="time" class="form-control" id="start-time" name="start-time">
                         </div>
                         <div class="form-group">
-                            <label for="end-time">End Time:</label>
+                            <label for="end-time">End time:</label>
                             <input type="time" class="form-control" id="end-time" name="end-time">
                         </div>
                         <div class="form-group">
-                            <label for="max-consults">Maximum Consultations Per Day:</label>
-                            <input type="number" class="form-control" id="max-consults" name="max-consults" min="1">
+                            <label for="max-consults">Maximum consultations for this day:</label>
+                            <input type="number" class="form-control" id="max-consults-day" name="max-consults-day"
+                                min="1">
                         </div>
                         <div class="form-group">
-                            <label for="max-students">Maximum students Per Consultation:</label>
-                            <input type="number" class="form-control" id="max-consults" name="max-consults" min="1">
+                            <label for="max-students">Maximum students per consultation:</label>
+                            <input type="number" class="form-control" id="max-consults-students"
+                                name="max-consults-students" min="1">
                         </div>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <div class="form-group">
+                            <label for="description">Please write any special info about this consultation:</label>
+                            <input type="string" class="form-control" id="description" name="description">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <footer class="text-center mt-5">
+        <p>&copy; Consulta</p>
+    </footer>
+
+</body>
+
+</html>
+
 </body>
 
 </html>
