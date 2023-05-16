@@ -1,0 +1,30 @@
+A meeting of Consulta was held on Microsoft Teams on 2023/05/16
+
+Attendees:
+	- Asher Radowsky
+	- Liad Peretz
+	- Josh Shapiro
+	- Elli Joffe
+
+Sprint 2 velocity: 25 points across 6 stories (7 dev sized stories delivered out of 8)
+
+Activities performed well:
+
+- Splitting up of coding tasks amongst devs
+- Timeous completion of coding activities
+- Azure pipelined smoothly
+- Trunk integrity maintained well
+- Code pull request format finilised (branches)
+
+Activities performed suboptimally:
+
+- Completed all but one user story
+- Timeous uploading of completed code to GitHub
+- Review tasks split up effectively
+
+
+Improvements to be made:
+
+- Ensure all user stories are complete in next sprint
+- Push code to repo as story is completed
+- Make it clear before review phase exactly who is reviewing whom
