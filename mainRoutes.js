@@ -28,6 +28,7 @@ mainRouter.get('/student_portal_page', function (req, res) {
 // Route to handle signup POST
 mainRouter.post('/signup', async function (req, res) {
   res.type('application/json')
+
   const result = await signup.addUser(req.body.name, req.body.email, req.body.password, req.body.role)
   res.send(result)
 })
@@ -36,7 +37,7 @@ mainRouter.post('/signup', async function (req, res) {
 mainRouter.post('/login', async function (req, res) {
   res.type('application/json')
   // login is the MODULE we defined in login.js, and checkCredentials public by exporting it from login.js
-  const result = await login.checkCredentials(req.body.userName, req.body.password)
+  const result = await login.checkCredentials(req.body.email, req.body.password)
   res.send(result)
 })
 
