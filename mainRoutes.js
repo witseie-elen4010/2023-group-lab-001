@@ -42,6 +42,17 @@ mainRouter.get('/events', async function (req, res) {
   }
 })
 
+mainRouter.post('/event_booking', async function (req, res) {
+  try {
+    const { eventId, personId, Date } = req.body
+    const result = await events.addEventBooking(eventId, personId, Date)
+    res.json({ status: 'Success', message: 'Event booked successfully.' })
+  } catch (err) {
+    console.error('Error booking event:', err)
+    res.json({ status: 'Error', message: 'Failed to book event.' })
+  }
+})
+
 // // Route to handle login POST
 // mainRouter.post('/events', async function (req, res) {
 //   res.type('application/json')

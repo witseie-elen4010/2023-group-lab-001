@@ -26,6 +26,37 @@ for (let day = 1; day <= 31; day++) {
   calendarDays.appendChild(calendarDay)
 }
 
+// Function to handle event booking
+async function bookEvent (EventId, EventDate) {
+  const PersonId = 2 // Hard-coded personId for example purposes, you should replace it with the actual personId logic
+  const date = new Date(EventDate)
+  const formattedDate = date.toLocaleDateString().split('T')[0]
+
+  const bookingData = {
+    eventId: EventId,
+    personId: PersonId,
+    Date: formattedDate // Use the current date as the booking date
+  }
+
+  try {
+    const response = await $.ajax({
+      type: 'POST',
+      url: '/event_booking',
+      data: JSON.stringify(bookingData),
+      contentType: 'application/json'
+    })
+
+    if (response.status === 'Success') {
+      alert('Event booked successfully!')
+    } else {
+      alert('Error booking event.')
+    }
+  } catch (error) {
+    console.error('Error booking event:', error)
+    alert('Error booking event.')
+  }
+}
+
 // Generate HTML table dynamically
 function generateTable (events) {
   const table = document.createElement('table')
@@ -69,6 +100,10 @@ function generateTable (events) {
     const bookButton = document.createElement('button')
     bookButton.textContent = 'Book'
     bookButton.classList.add('btn', 'btn-primary')
+    // Add event listener to the button
+    bookButton.addEventListener('click', function () {
+      bookEvent(event.EventId, event.EventDate)
+    })
     buttonCell.appendChild(bookButton)
     row.appendChild(buttonCell)
 
