@@ -10,15 +10,6 @@ document.getElementById("signup-form").addEventListener("submit", (e) => {
   // Concatenate firstname and lastname to create a username
   const name = firstname + " " + lastname;
 
-  // Email validation
-  if (role === 'student' && !email.endsWith("@students.wits.ac.za")) {
-    alert("Please input a valid student email");
-    return;
-  } else if (role === 'teacher' && !email.endsWith("@wits.ac.za")) {
-    alert("Please input a valid teacher email");
-    return;
-  }
-
   // Sign up process
   $.ajax({
     type: "POST",

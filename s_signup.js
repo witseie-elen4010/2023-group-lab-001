@@ -1,6 +1,24 @@
 const conn = require('./db_connection');
 
+function isEmailValid(email, role) {
+    if (role === 'student' && !email.endsWith("@students.wits.ac.za")) {
+        return false;
+    } else if (role === 'teacher' && !email.endsWith("@wits.ac.za")) {
+        return false;
+    }
+    return true;
+}
+
+
 async function addUser(name, email, password, role) {
+
+    // Check if email is valid
+    if (!isEmailValid(email, role)) {
+        if (role === 'student') {
+            return { status: 'Invalid', message: 'Please enter a valid student email' };
+        }
+        else { return { status: 'Invalid', message: 'Please enter a valid teacher email' }; }
+    }
 
     // Hash password at later stage
     //const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,4 +44,4 @@ async function addUser(name, email, password, role) {
 }
 
 
-module.exports = { addUser };
+module.exports = { addUser, isEmailValid };
