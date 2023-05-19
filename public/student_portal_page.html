@@ -82,6 +82,19 @@
         <div class="text-center">
             <h2 id="book-consultation">Book a Consultation</h2>
         </div>
+        
+
+        <div class="container">
+            <h2>Select an option:</h2>
+            <select id="lecturerDropDown" class="form-control">
+                <option>All</option>
+                <!-- Options will be dynamically generated -->
+            </select>
+
+            <button class= 'btn btn-primary' onclick="generateFilteredEventTable()">Submit</button>
+        </div>
+        <p></p>
+
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-striped" id="tableContainer">
@@ -90,6 +103,8 @@
                 </table>
             </div>
         </div>
+
+        
 
         
         <!-- <form>

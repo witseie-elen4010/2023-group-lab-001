@@ -9,7 +9,7 @@ const app = express()
 
 mainRouter.use('/', express.static(path.join(__dirname, 'public', 'resources')))
 
-//mainRouter.use(express.json())
+// mainRouter.use(express.json())
 
 app.use(express.json()) // This line is very important
 
@@ -18,7 +18,7 @@ mainRouter.get('/', function (req, res) {
 })
 
 mainRouter.get('/lecturer_dashboard', function (req, res) {
-   res.sendFile(path.join(__dirname, 'public', 'lecturer_dashboard.html'))
+  res.sendFile(path.join(__dirname, 'public', 'lecturer_dashboard.html'))
 })
 
 mainRouter.get('/student_portal_page', function (req, res) {
@@ -54,13 +54,12 @@ mainRouter.get('/events', async function (req, res) {
 mainRouter.post('/event_booking', async function (req, res) {
   try {
     const { eventId, personId, Date } = req.body
-    const result = await events.addEventBooking(eventId, personId, Date)
+    await events.addEventBooking(eventId, personId, Date)
     res.json({ status: 'Success', message: 'Event booked successfully.' })
   } catch (err) {
     console.error('Error booking event:', err)
     res.json({ status: 'Error', message: 'Failed to book event.' })
-  }  
-  res.send(result)
+  }
 })
 
 // Route to handle dashboard POST
