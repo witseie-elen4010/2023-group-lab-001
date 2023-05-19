@@ -66,8 +66,8 @@ mainRouter.post('/event_booking', async function (req, res) {
 // Route to handle dashboard POST
 mainRouter.post('/dashboard', async function (req, res) {
   res.type('application/json')
-  const { dayOfMonth, startTime, recurringOptionBinary, endDate, endTime, maxConsultsDay, maxConsultsStudents, description } = req.body
-  const result = await dashboard.checkInfo(dayOfMonth, startTime, recurringOptionBinary, endDate, endTime, maxConsultsDay, maxConsultsStudents, description)
+  const { dow, startDate, endDate, startTime, endTime, duration,  recurringWeeks, maxConsultStudents, description } = req.body
+  const result = await dashboard.createConsultation(dow, startDate, endDate, startTime, endTime, duration,  recurringWeeks, maxConsultStudents, description)
 
   res.send(result)
 })

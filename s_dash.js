@@ -1,6 +1,6 @@
 const conn = require('./db_connection')
 
-async function checkInfo(dayOfmonth, startTime, recurringOptionBinary, endDate, endTime, maxConsultsDay, maxConsultsStudents, Description) {
+/*async function checkInfo(dayOfmonth, startTime, recurringOptionBinary, endDate, endTime, maxConsultsDay, maxConsultsStudents, Description) {
     const date = new Date(dayOfmonth) // convert date string to day of the week. 1 for Monday, 2 for Tuesday, etc.
     const dayOfWeek = date.getDay()
 
@@ -47,4 +47,19 @@ async function checkInfo(dayOfmonth, startTime, recurringOptionBinary, endDate, 
     }
 }
 
-module.exports = { checkInfo }
+module.exports = { checkInfo }*/
+
+async function createConsultation(dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description) {
+    personId = 1
+    const params = [personId, dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description]
+
+    try {
+        // Use prepared statements to sanitize inputs to protect from SQL injection attacks
+        const [results] = await conn.promise().query('INSERT INTO event (PersonId, DOW, StartDate, EndDate, StartTime, EndTime, Duration, RecurringWeeks, SlotsPerDay, Description) VALUES (?,?,?,?,?,?,?,?,?,?)', params)
+        console.log(results)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = {createConsultation}
