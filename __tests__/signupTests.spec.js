@@ -1,8 +1,13 @@
 
 // Import fucntion and promise pool
-const { addUser } = require('../s_signup');
 const pool = require('../db_connection');
+const bcrypt = require('bcrypt');
+const { addUser, isEmailValid } = require('../s_signup');
 
+jest.mock('bcrypt', () => ({
+    hash: jest.fn(),
+    compare: jest.fn()
+}));
 jest.mock('../db_connection', () => ({
     promise: jest.fn().mockReturnThis(),
     query: jest.fn(),
@@ -16,33 +21,38 @@ describe('Signup functionality', () => {
 
     test('adds new student correctly to the database', async () => {
         const mockUser = {
-            name: 'Jack Test',
-            email: 'jack@students.wits.ac.za',
-            password: 'password123',
-            role: 'student',
+          name: 'Jack Test',
+          email: 'jack@students.wits.ac.za',
+          password: 'password123',
+          role: 'student',
         };
-
+      
+        const mockHashedPassword = 'hashed_password123';
+        bcrypt.hash.mockResolvedValueOnce(mockHashedPassword);
+        
         // Mock the return value of the pool's query function
         pool.query.mockResolvedValueOnce([{
-            ...mockUser,
-            Role: mockUser.role,
-            Name: mockUser.name,
-            Email: mockUser.email,
-            Password: mockUser.password,
+          ...mockUser,
+          Role: mockUser.role,
+          Name: mockUser.name,
+          Email: mockUser.email,
+          Password: mockHashedPassword,  // the returned password should now be the hashed password
         }]);
-
+      
         const res = await addUser(mockUser.name, mockUser.email, mockUser.password, mockUser.role);
-
+      
         // Assertions
         expect(res.status).toBe('Valid');
         expect(res.href).toBe('./student_portal_page');
-
+      
         // Check if the query is called with the correct SQL and parameters
+        // The password sent to the query should now be the hashed password
         expect(pool.query).toBeCalledWith(
-            "INSERT INTO person (Name, Email, Password, Role) VALUES (?, ?, ?, ?)",
-            [mockUser.name, mockUser.email, mockUser.password, mockUser.role],
+          "INSERT INTO person (Name, Email, Password, Role) VALUES (?, ?, ?, ?)",
+          [mockUser.name, mockUser.email, mockHashedPassword, mockUser.role],
         );
-    });
+      });
+      
 
     test('adds new teacher correctly to the database', async () => {
         const mockUser = {
@@ -52,13 +62,16 @@ describe('Signup functionality', () => {
             role: 'teacher',
         };
 
+        const mockHashedPassword = 'hashed_password123';
+        bcrypt.hash.mockResolvedValueOnce(mockHashedPassword);
+
         // Mock the return value of the pool's query function
         pool.query.mockResolvedValueOnce([{
             ...mockUser,
             Role: mockUser.role,
             Name: mockUser.name,
             Email: mockUser.email,
-            Password: mockUser.password,
+            Password: mockHashedPassword,
         }]);
 
         const res = await addUser(mockUser.name, mockUser.email, mockUser.password, mockUser.role);
@@ -70,7 +83,7 @@ describe('Signup functionality', () => {
         // Check if the query is called with the correct SQL and parameters
         expect(pool.query).toBeCalledWith(
             "INSERT INTO person (Name, Email, Password, Role) VALUES (?, ?, ?, ?)",
-            [mockUser.name, mockUser.email, mockUser.password, mockUser.role],
+            [mockUser.name, mockUser.email, mockHashedPassword, mockUser.role],
         );
     });
 
@@ -96,22 +109,49 @@ describe('Signup functionality', () => {
 
 });
 
-const { isEmailValid } = require('../s_signup');
 
 describe('Email validation', () => {
-  it('should return false for student email not ending with @students.wits.ac.za', () => {
-    expect(isEmailValid('test@test.com', 'student')).toBe(false);
-  });
+    it('should return false for student email not ending with @students.wits.ac.za', () => {
+        expect(isEmailValid('test@test.com', 'student')).toBe(false);
+    });
 
-  it('should return true for student email ending with @students.wits.ac.za', () => {
-    expect(isEmailValid('test@students.wits.ac.za', 'student')).toBe(true);
-  });
+    it('should return true for student email ending with @students.wits.ac.za', () => {
+        expect(isEmailValid('test@students.wits.ac.za', 'student')).toBe(true);
+    });
 
-  it('should return false for teacher email not ending with @wits.ac.za', () => {
-    expect(isEmailValid('test@test.com', 'teacher')).toBe(false);
-  });
+    it('should return false for teacher email not ending with @wits.ac.za', () => {
+        expect(isEmailValid('test@test.com', 'teacher')).toBe(false);
+    });
 
-  it('should return true for teacher email ending with @wits.ac.za', () => {
-    expect(isEmailValid('test@wits.ac.za', 'teacher')).toBe(true);
-  });
+    it('should return true for teacher email ending with @wits.ac.za', () => {
+        expect(isEmailValid('test@wits.ac.za', 'teacher')).toBe(true);
+    });
 });
+
+describe('Signup functionality with hashed password', () => {
+    afterEach(() => {
+        // Clear all instances and calls to constructor and all methods:
+        bcrypt.hash.mockClear();
+    });
+
+    test('adds new user correctly to the database with hashed password', async () => {
+        const mockUser = {
+            name: 'Jack Test',
+            email: 'jack@students.wits.ac.za',
+            password: 'password123',
+            role: 'student',
+        };
+
+        const mockHashedPassword = 'hashed_password123';
+
+        // Mock the return value of the bcrypt's hash function
+        bcrypt.hash.mockResolvedValueOnce(mockHashedPassword);
+
+        // Add the user (this should call bcrypt.hash)
+        await addUser(mockUser.name, mockUser.email, mockUser.password, mockUser.role);
+
+        // Assertions
+        expect(bcrypt.hash).toBeCalledWith(mockUser.password, 10);
+    });
+});
+

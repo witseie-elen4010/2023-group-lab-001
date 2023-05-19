@@ -1,4 +1,5 @@
 const conn = require('./db_connection');
+const bcrypt = require('bcrypt');
 
 function isEmailValid(email, role) {
     if (role === 'student' && !email.endsWith("@students.wits.ac.za")) {
@@ -20,14 +21,16 @@ async function addUser(name, email, password, role) {
         else { return { status: 'Invalid', message: 'Please enter a valid teacher email' }; }
     }
 
-    // Hash password at later stage
-    //const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // SQL query to insert new user into the database
-    const params = [name, email, password, role];
+    const params = [name, email, hashedPassword, role];
+
     try {
         //Use prepared statements to sanitize inputs to protect from SQL injection attacks
         const [results] = await conn.promise().query("INSERT INTO person (Name, Email, Password, Role) VALUES (?, ?, ?, ?)", params);
+        console.log(results);
         let redirectUrl;
         if (role === 'student') {
             redirectUrl = './student_portal_page';
