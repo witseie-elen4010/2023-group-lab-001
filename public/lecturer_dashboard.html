@@ -32,36 +32,24 @@
             <img src="logo.png" alt="Consulta logo" class="img-fluid">
         </div>
         <h1 class="text-center my-5">Lecturer Dashboard</h1>
-        <div class="col-md-6 mx-auto">
-            <div class="card mb-3">
+        <div class="col-md-8 mx-auto">
+            <div class="card mb-3" style="width: 40rem">
                 <div class="card-header"><strong>Upcoming Consultations</strong></div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="row">
-                            <div class="col-md-6 font-weight-bold">Name</div>
-                            <div class="col-md-3 font-weight-bold">Time</div>
-                            <div class="col-md-3 font-weight-bold">Cancel</div>
+                            <div class="col-md-5 font-weight-bold">Student Name/s</div>
+                            <div class="col-md-3 font-weight-bold">Date & Time</div>
+                            <div class="col-md-2 font-weight-bold">Duration</div>
+                            <div class="col-md-2 font-weight-bold">Delete</div>
                         </div>
                     </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-md-6">Bob Smith</div>
-                            <div class="col-md-3">5 May 2:00 PM</div>
-                            <div class="col-md-3"><button class="btn btn-danger">Cancel</button></div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-md-6">Mary Jane</div>
-                            <div class="col-md-3">6 May 3:00 PM</div>
-                            <div class="col-md-3"><button class="btn btn-danger">Cancel</button></div>
-                        </div>
-                    </li>
+                     <span id="upcomingConsultationsList"></span>
                 </ul>
             </div>
         </div>
-        <div class="col-md-6 mx-auto">
-            <div class="card mb-3">
+        <div class="col-md-8 mx-auto">
+            <div class="card mb-3" style="width: 40rem">
                 <div class="card-header"><strong>Create a Consulation</strong></div>
                 <div class="card-body">
                     <form id="availability-form">
@@ -114,7 +102,7 @@
                         <label for="description">Please write any special info about this consultation:</label>
                         <input type="string" class="form-control" id="description" name="description">
                     </div>
-                    <button type="button" id="save-chages" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="save-chages" class="btn btn-primary">Preview Consultation...</button>
                     </form>
                 </div>
 

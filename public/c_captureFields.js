@@ -1,3 +1,46 @@
+
+
+$.ajax({
+  type: 'GET',
+  contentType: 'application/json',
+  url: './lecturerUpcomingConsultations' // URL that the POST is sent to
+}).done(function (res) {
+  populateUpcoming(res)
+})
+
+//populate upcoming consultations section
+function populateUpcoming(consultations)
+{
+  let content = []
+  for (let i = 0; i < consultations.length; i++)
+  {
+    content.push(createUpcomingEntry(consultations[i]))
+  } 
+  $('#upcomingConsultationsList').html(content.join(''))
+
+}
+
+function createUpcomingEntry(consultation)
+{
+  let content = []
+  
+  content.push('<li class="list-group-item">')
+  content.push('<div class="row">')
+  content.push(`<div class="col-md-5 font-weight-bold">${consultation.studentName}</div>`)
+  content.push(`<div class="col-md-3">${new Date(consultation.Date).toISOString().split('T')[0]} ${consultation.StartTime}</div>`)
+  content.push(`<div class="col-md-2">${consultation.Duration} mins</div>`)
+  content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteConsultation(${consultation.id})">Delete</button></div>`)
+  content.push('</div></li>')
+  return content.join('')
+}
+
+function deleteConsultation(id)
+{
+  alert(`${id} will be deleted`)
+  //on done refresh
+}
+
+
 document.getElementById("save-chages").addEventListener('click', () => {
 
   // Get form values
@@ -66,19 +109,6 @@ document.getElementById("save-chages").addEventListener('click', () => {
   document.getElementById('create-consultation').addEventListener('click', () => {
     //console.log('Created consultation')
 
-    // Prepare the data payload
-    const data = {
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-      duration,
-      dow,
-      recurringWeeks,
-      maxConsultStudents,
-      description
-    }
-
     $.ajax({
       type: 'POST',
       contentType: 'application/json', // header property of http request, which tells the server what type of data to
@@ -86,11 +116,8 @@ document.getElementById("save-chages").addEventListener('click', () => {
       data: JSON.stringify({dow, startDate, endDate, startTime, endTime, duration,  recurringWeeks, maxConsultStudents, description }), // data sent (converted to JSON)
       url: './dashboard' // URL that the POST is sent to
     }).done(function (res) {
-      if (res.status === 'Valid') {
-        window.location.href = res.href
-      } else {
-        console.log('Invalid input')
-      }
+      console.log('DONE')
+      $('#consultationSummary').modal('hide');
     })
   })
 

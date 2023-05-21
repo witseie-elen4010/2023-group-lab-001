@@ -8,13 +8,13 @@ async function checkCredentials(email, enteredPassword) {
    if (results.length > 0) {
       // Get the first result (the user)
       const user = results[0];
-      console.log("The user password is: " + user.Password)
-      console.log("The entered password is: " + enteredPassword)
+      //console.log("The user password is: " + user.Password)
+      //console.log("The entered password is: " + enteredPassword)
 
       // Check the entered password against the stored hashed password
       const passwordMatch = await bcrypt.compare(enteredPassword, user.Password);
 
-      console.log(passwordMatch)
+      //console.log(passwordMatch)
 
       if (passwordMatch) {
          let redirectUrl;
@@ -23,7 +23,7 @@ async function checkCredentials(email, enteredPassword) {
          } else if (user.Role === 'teacher') {
             redirectUrl = './lecturer_dashboard';
          }
-         return { href: redirectUrl, status: 'Valid' };
+         return { href: redirectUrl, status: 'Valid', userID: user.Id};
       } 
    }
 
