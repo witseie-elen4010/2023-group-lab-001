@@ -30,7 +30,9 @@ for (let day = 1; day <= 31; day++) {
 async function bookEvent (EventId, EventDate) {
   const PersonId = 2 // Hard-coded personId for example purposes, you should replace it with the actual personId logic
   const date = new Date(EventDate)
-  const formattedDate = date.toLocaleDateString().split('T')[0]
+  date.setDate(date.getDate()+1)
+  const formattedDate = date.toISOString().split('T')[0]
+  console.log(formattedDate)
 
   const bookingData = {
     eventId: EventId,
@@ -47,7 +49,8 @@ async function bookEvent (EventId, EventDate) {
     })
 
     if (response.status === 'Success') {
-      alert('Event booked successfully!')
+
+      alert('Event booked successfully:\n' + 'Date: ' + bookingData.Date + '\nEvent Id: ' + bookingData.eventId)
     } else {
       alert('Error booking event.')
     }
