@@ -1,12 +1,16 @@
 
+function loadConsultations()
+{
+  $.ajax({
+    type: 'GET',
+    contentType: 'application/json',
+    url: './lecturerUpcomingConsultations' // URL that the POST is sent to
+  }).done(function (res) {
+    populateUpcoming(res)
+  })
+}
 
-$.ajax({
-  type: 'GET',
-  contentType: 'application/json',
-  url: './lecturerUpcomingConsultations' // URL that the POST is sent to
-}).done(function (res) {
-  populateUpcoming(res)
-})
+loadConsultations()
 
 //populate upcoming consultations section
 function populateUpcoming(consultations)
@@ -26,18 +30,36 @@ function createUpcomingEntry(consultation)
   
   content.push('<li class="list-group-item">')
   content.push('<div class="row">')
-  content.push(`<div class="col-md-5 font-weight-bold">${consultation.studentName}</div>`)
-  content.push(`<div class="col-md-3">${new Date(consultation.Date).toISOString().split('T')[0]} ${consultation.StartTime}</div>`)
+  content.push(`<div class="col-md-2 font-weight-bold">${consultation.studentName}</div>`)
+  content.push(`<div class="col-md-3">${consultation.Description}</div>`)
+  content.push(`<div class="col-md-3">${new Date(consultation.Date).toISOString().split('T')[0]} @ ${consultation.StartTime}</div>`)
   content.push(`<div class="col-md-2">${consultation.Duration} mins</div>`)
-  content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteConsultation(${consultation.id})">Delete</button></div>`)
+  content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteConsultation(${consultation.Id})">Delete</button></div>`)
   content.push('</div></li>')
   return content.join('')
 }
 
 function deleteConsultation(id)
 {
-  alert(`${id} will be deleted`)
-  //on done refresh
+
+  $.ajax({
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({bookingID: id}),
+      url: './lecDeleteBooking' // URL that the POST is sent to
+  }).done(function (res) {
+
+    if(res.status === 'Completed')
+    {
+      alert(`Booking: "${id}" has been deleted`)
+      loadConsultations()
+    }
+    
+    
+  })
+
+  //populateUpcoming()
+
 }
 
 

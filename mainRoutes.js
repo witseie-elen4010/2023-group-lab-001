@@ -6,6 +6,7 @@ const events = require('./s_student_page')
 const signup = require('./s_signup')
 const dashboard = require('./s_dash')
 const lecUpcomingConsults = require('./s_lecturerUpcomingConsultations')
+const lecDeleteUpcomingBooking = require('./s_lecDeleteBooking')
 const app = express()
 
 mainRouter.use('/', express.static(path.join(__dirname, 'public', 'resources')))
@@ -139,6 +140,14 @@ mainRouter.get('/lecturerUpcomingConsultations', authMiddleware('teacher'), asyn
   console.log(results)
   res.send(results)
   
+})
+
+mainRouter.post('/lecDeleteBooking', authMiddleware('teacher'), async function(req, res){
+  res.type('application/json')
+  const bookingID = req.body.bookingID
+  const result = await lecDeleteUpcomingBooking.lecDeleteBooking(bookingID)
+  console.log(result)
+  res.send(result)
 })
 
 module.exports = mainRouter
