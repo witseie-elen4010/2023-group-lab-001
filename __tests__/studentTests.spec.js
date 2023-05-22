@@ -1,4 +1,4 @@
-const { getAllEvents, addEventBooking } = require('../s_student_page')
+const { getAllEvents, addEventBooking, getAllConsults } = require('../s_student_page')
 
 // Mock the database connection and queries
 jest.mock('../db_connection', () => ({
