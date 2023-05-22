@@ -43,11 +43,13 @@ async function getAllEvents() {
 async function getAllConsults(personId) {
   try {
     // Use prepared statements to sanitize inputs to protect from SQL injection attacks
-    const [results] = await pool.promise().query('SELECT e.StartTime, e.StartDate, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?', [personId])
+    const query = 'SELECT e.StartTime, e.StartDate, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?'
+    const [results] = await pool.promise().query(query, [personId])
     // console.log(results)
     return results
   } catch (error) {
-    console.log(error)
+    console.error('Error retrieving events:', error)
+    throw error
   }
 }
 

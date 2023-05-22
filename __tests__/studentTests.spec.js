@@ -98,3 +98,9 @@ describe('addEventBooking', () => {
     expect(require('../db_connection').promise).not.toHaveBeenCalled()
   })
 })
+
+describe('getAllConsults', () => {
+  beforeEach(() => {
+    require('../db_connection').promise.mockClear() // Reset the promise mock before each test case
+    require('../db_connection').query.mockClear() // Reset the query mock before each test case
+  })

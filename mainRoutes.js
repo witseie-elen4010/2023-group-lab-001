@@ -116,10 +116,15 @@ mainRouter.post('/event_booking', authMiddleware('student'), async function (req
 })
 
 mainRouter.get('/consults', authMiddleware('student'), async function (req, res) {
-  userID = req.cookies.userID
-  res.type('application/json')
-  const results = await consults.getAllConsults(userID)
-  res.send(results)
+  const userID = req.cookies.userID
+  try {
+    res.type('application/json')
+    const results = await consults.getAllConsults(userID)
+    res.send(results)
+  } catch (err) {
+    console.error('Error retrieving consults: (R)', err)
+    res.json({ status: 'Error', message: 'Failed to retrieve events.' })
+  }
 })
 
 mainRouter.post('/lecDeleteBooking', authMiddleware('student'), async function (req, res) {
