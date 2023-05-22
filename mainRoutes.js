@@ -5,6 +5,8 @@ const login = require('./s_login')
 const events = require('./s_student_page')
 const signup = require('./s_signup')
 const dashboard = require('./s_dash')
+const lecUpcomingConsults = require('./s_lecturerUpcomingConsultations')
+const lecDeleteUpcomingBooking = require('./s_lecDeleteBooking')
 const app = express()
 
 mainRouter.use('/', express.static(path.join(__dirname, 'public', 'resources')))
@@ -60,6 +62,10 @@ mainRouter.post('/login', async function (req, res) {
 
     // Set the JWT in an HttpOnly cookie
     res.cookie('token', token, { httpOnly: true });
+
+    res.cookie('userID', result.userID);
+    
+    
   }
 
   res.send(result)
@@ -118,10 +124,29 @@ mainRouter.post('/event_booking', authMiddleware('student'), async function (req
 
 // Route to handle dashboard POST
 mainRouter.post('/dashboard', authMiddleware('teacher'), async function (req, res) {
+  userID = req.cookies.userID
   res.type('application/json')
-  const { dayOfMonth, startTime, recurringOptionBinary, endDate, endTime, maxConsultsDay, maxConsultsStudents, description } = req.body
-  const result = await dashboard.checkInfo(dayOfMonth, startTime, recurringOptionBinary, endDate, endTime, maxConsultsDay, maxConsultsStudents, description)
+  const { dow, startDate, endDate, startTime, endTime, duration,  recurringWeeks, maxConsultStudents, description } = req.body
+  const result = await dashboard.createConsultation(userID, dow, startDate, endDate, startTime, endTime, duration,  recurringWeeks, maxConsultStudents, description)
 
+  res.send(result)
+})
+
+mainRouter.get('/lecturerUpcomingConsultations', authMiddleware('teacher'), async function(req, res){
+  userID = req.cookies.userID
+  res.type('application/json')
+
+  let results = await lecUpcomingConsults.findLecturerUpcomingConsultations(userID)
+  console.log(results)
+  res.send(results)
+  
+})
+
+mainRouter.post('/lecDeleteBooking', authMiddleware('teacher'), async function(req, res){
+  res.type('application/json')
+  const bookingID = req.body.bookingID
+  const result = await lecDeleteUpcomingBooking.lecDeleteBooking(bookingID)
+  console.log(result)
   res.send(result)
 })
 
