@@ -72,12 +72,23 @@ function generateTable(events) {
 
   const tbody = document.createElement('tbody')
 
+  const keyToTitleName = {
+    PersonName: 'Lecturer:',
+    EventDescription: 'Description:',
+    EventStartTime: 'Time',
+    EventDate: 'Date',
+    EventDuration: 'Duration of consultation'
+  }
+  const wantedKeys = Object.keys(keyToTitleName)
+
   // Create table header row
   const headerRow = document.createElement('tr')
   Object.keys(events[0][0]).forEach(key => {
-    const th = document.createElement('th')
-    th.textContent = key
-    headerRow.appendChild(th)
+    if (wantedKeys.includes(key)) {
+      const th = document.createElement('th')
+      th.textContent = keyToTitleName[key]
+      headerRow.appendChild(th)
+    }
   })
   thead.appendChild(headerRow)
 
@@ -85,19 +96,22 @@ function generateTable(events) {
   events[0].forEach(event => {
     const row = document.createElement('tr')
     Object.entries(event).forEach(([key, value]) => {
-      const cell = document.createElement('td')
+      if (wantedKeys.includes(key)) {
+        const cell = document.createElement('td')
 
-      if (key === 'EventDate') {
-        const firstOccurrence = new Date(value)
-        const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
-        const dateString = firstOccurrence.toLocaleDateString('en-US', options)
+        if (key === 'EventDate') {
+          const firstOccurrence = new Date(value)
+          const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
+          const dateString = firstOccurrence.toLocaleDateString('en-US', options)
 
-        cell.textContent = dateString
-      } else {
-        cell.textContent = value
+          cell.textContent = dateString
+        } else {
+          cell.textContent = value
+        }
+
+        row.appendChild(cell)
       }
-
-      row.appendChild(cell)
+      
     })
 
     // Create a button element
@@ -192,12 +206,24 @@ function generateTableV2(events) {
 
   const tbody = document.createElement('tbody')
 
+  const keyToTitleName = {
+    PersonName: 'Lecturer:',
+    EventDescription: 'Description:',
+    EventStartTime: 'Time',
+    EventDate: 'Date',
+    EventDuration: 'Duration of consultation'
+  }
+  const wantedKeys = Object.keys(keyToTitleName)
+
   // Create table header row
   const headerRow = document.createElement('tr')
   Object.keys(events[0]).forEach(key => {
-    const th = document.createElement('th')
-    th.textContent = key
-    headerRow.appendChild(th)
+    if (wantedKeys.includes(key))
+    {
+      const th = document.createElement('th')
+      th.textContent = keyToTitleName[key]
+      headerRow.appendChild(th)
+    }
   })
   thead.appendChild(headerRow)
 
@@ -205,19 +231,21 @@ function generateTableV2(events) {
   events.forEach(event => {
     const row = document.createElement('tr')
     Object.entries(event).forEach(([key, value]) => {
-      const cell = document.createElement('td')
+      if (wantedKeys.includes(key)) {
+        const cell = document.createElement('td')
 
-      if (key === 'EventDate') {
-        const firstOccurrence = new Date(value)
-        const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
-        const dateString = firstOccurrence.toLocaleDateString('en-US', options)
+        if (key === 'EventDate') {
+          const firstOccurrence = new Date(value)
+          const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
+          const dateString = firstOccurrence.toLocaleDateString('en-US', options)
 
-        cell.textContent = dateString
-      } else {
-        cell.textContent = value
+          cell.textContent = dateString
+        } else {
+          cell.textContent = value
+        }
+
+        row.appendChild(cell)
       }
-
-      row.appendChild(cell)
     })
 
     // Create a button element

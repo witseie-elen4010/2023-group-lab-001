@@ -86,12 +86,10 @@
 
         <div class="container">
             <h2>Select an option:</h2>
-            <select id="lecturerDropDown" class="form-control">
+            <select id="lecturerDropDown" onchange="generateFilteredEventTable()" class="form-control">
                 <option>All</option>
                 <!-- Options will be dynamically generated -->
             </select>
-
-            <button class='btn btn-primary' onclick="generateFilteredEventTable()">Submit</button>
         </div>
         <p></p>
 
