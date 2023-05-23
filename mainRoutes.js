@@ -127,7 +127,7 @@ mainRouter.get('/consults', authMiddleware('student'), async function (req, res)
   }
 })
 
-mainRouter.post('/lecDeleteBooking', authMiddleware('student'), async function (req, res) {
+mainRouter.post('/studentDeleteBooking', authMiddleware('student'), async function (req, res) {
   res.type('application/json')
   const bookingID = req.body.bookingID
   const result = await lecDeleteUpcomingBooking.lecDeleteBooking(bookingID)
