@@ -26,17 +26,16 @@ for (let day = 1; day <= 31; day++) {
   calendarDays.appendChild(calendarDay)
 }
 
+
 // Function to handle event booking
-async function bookEvent (EventId, EventDate) {
-  const PersonId = 2 // Hard-coded personId for example purposes, you should replace it with the actual personId logic
+async function bookEvent(EventId, EventDate) {
   const date = new Date(EventDate)
-  date.setDate(date.getDate()+1)
+  date.setDate(date.getDate() + 1)
   const formattedDate = date.toISOString().split('T')[0]
-  console.log(formattedDate)
+  //console.log(formattedDate)
 
   const bookingData = {
     eventId: EventId,
-    personId: PersonId,
     Date: formattedDate // Use the current date as the booking date
   }
 
@@ -51,6 +50,8 @@ async function bookEvent (EventId, EventDate) {
     if (response.status === 'Success') {
 
       alert('Event booked successfully:\n' + 'Date: ' + bookingData.Date + '\nEvent Id: ' + bookingData.eventId)
+      deleteAllConsultations()
+      getAllConsults()
     } else {
       alert('Error booking event.')
     }
@@ -61,7 +62,7 @@ async function bookEvent (EventId, EventDate) {
 }
 
 // Generate HTML table dynamically
-function generateTable (events) {
+function generateTable(events) {
   const table = document.createElement('table')
   table.id = 'openConsultationTable'
   table.classList.add('table', 'table-striped')
@@ -120,7 +121,7 @@ function generateTable (events) {
 
   return table
 }
-function sortEvents (events) {
+function sortEvents(events) {
   events[0].sort((a, b) => {
     const dateA = new Date(a.EventDate)
     const dateB = new Date(b.EventDate)
@@ -137,7 +138,7 @@ function sortEvents (events) {
   })
 }
 
-function generateLecturerOptions (events) {
+function generateLecturerOptions(events) {
   const listOfLecturers = []
   events[0].forEach(event => {
     Object.entries(event).forEach(([key, value]) => {
@@ -149,7 +150,7 @@ function generateLecturerOptions (events) {
   return new Set(listOfLecturers)
 }
 
-function generateHTMLLectuerOptions (listOfLecturers) {
+function generateHTMLLectuerOptions(listOfLecturers) {
   const dropdown = document.getElementById('lecturerDropDown')
   listOfLecturers.forEach(lecturer => {
     const lecturerOption = document.createElement('option')
@@ -257,7 +258,7 @@ function sortEvents(events) {
   })
 }
 
-function getAllEvents () {
+function getAllEvents() {
   return new Promise(function (resolve, reject) {
     $.ajax({
       type: 'GET',
@@ -269,7 +270,6 @@ function getAllEvents () {
           const events = res.events
 
           // Perform operations with the events data
-          console.log(events)
           // Display or process the events data as needed
 
           // Display list of unique lecturers
@@ -304,7 +304,6 @@ let allEvents
 // Usage of getAllEvents() with promise
 getAllEvents()
   .then(function (result) {
-    console.log('Result:', result) // Handle the resolved value here
     allEvents = result
   })
   .catch(function (error) {
@@ -327,3 +326,131 @@ function generateFilteredEventTable() {
   container.appendChild(generateTableV2(filteredEvents))
 
 }
+function getAllConsults() {
+  $.ajax({
+    type: 'GET',
+    contentType: 'application/json',
+    url: './consults'
+  }).done(function (res) {
+    const currentDate = new Date(); // Get the current date
+    for (let i = 0; i < res.length; i++) {
+      const startDate = res[i].StartDate;
+      const actualDate = startDate.substr(0, startDate.indexOf("T"));
+
+      const consultationDate = new Date(actualDate); // Convert the actualDate to a Date object
+      const daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 60 * 60 * 24)); // Calculate the number of days until the consultation
+
+      showConsultation(res[i].lecturerName, actualDate, res[i].StartTime, daysUntilConsultation, res[i].bookingId);
+    }
+  });
+}
+
+getAllConsults()
+
+function showConsultation(name, date, time, daysUntil, bookingId) {
+  // Create a new list item for the consultation
+  const consultationItem = document.createElement('li');
+  consultationItem.classList.add('list-group-item');
+
+  // Create the row divs for name, date, time, days until, and cancel button
+  const rowDiv = document.createElement('div');
+  rowDiv.classList.add('row');
+
+  const detailsDiv = document.createElement('div');
+  detailsDiv.classList.add('col-md-6');
+
+  const nameHeading = document.createElement('h5');
+  nameHeading.textContent = 'Lecturer:';
+  detailsDiv.appendChild(nameHeading);
+
+  const nameDiv = document.createElement('div');
+  nameDiv.textContent = name;
+  detailsDiv.appendChild(nameDiv);
+
+  const dateHeading = document.createElement('h5');
+  dateHeading.textContent = 'Date: ';
+  detailsDiv.appendChild(dateHeading);
+
+  const dateDiv = document.createElement('div');
+  dateDiv.textContent = date;
+  detailsDiv.appendChild(dateDiv);
+
+  const timeHeading = document.createElement('h5');
+  timeHeading.textContent = 'Time: ';
+  detailsDiv.appendChild(timeHeading);
+
+  const timeDiv = document.createElement('div');
+  timeDiv.textContent = time;
+  detailsDiv.appendChild(timeDiv);
+
+  const daysUntilDiv = document.createElement('div');
+  daysUntilDiv.classList.add('col-md-2');
+
+  const daysUntilHeading = document.createElement('h5');
+  daysUntilHeading.textContent = 'Days Until Consultation:';
+  daysUntilDiv.appendChild(daysUntilHeading);
+
+  const daysUntilSpan = document.createElement('span');
+  daysUntilSpan.classList.add('days-until');
+  daysUntilSpan.textContent = daysUntil; // Set the daysUntil value as the content of the span element
+
+  const bookingIdDiv = document.createElement('div');
+  bookingIdDiv.classList.add('col-md-1');
+
+  const bookingIdHeading = document.createElement('h5');
+  bookingIdHeading.textContent = 'Booking ID:';
+  bookingIdDiv.appendChild(bookingIdHeading);
+
+  const bookingIdSpan = document.createElement('span');
+  bookingIdSpan.textContent = bookingId; // Set the bookingId value as the content of the span element
+
+  const cancelDiv = document.createElement('div');
+  cancelDiv.classList.add('col-md-3', 'text-right');
+
+  const cancelButton = document.createElement('button');
+  cancelButton.classList.add('btn', 'btn-danger');
+  cancelButton.textContent = 'Cancel';
+
+  // Add cancel button click event handler
+  cancelButton.addEventListener('click', function () {
+    // This function will be called when the cancel button is clicked
+    deleteAllConsultations()
+    deleteConsult(bookingId)
+  });
+
+  // Append elements to their respective parent elements
+  cancelDiv.appendChild(cancelButton);
+  rowDiv.appendChild(detailsDiv);
+  rowDiv.appendChild(daysUntilDiv);
+  rowDiv.appendChild(bookingIdDiv);
+  rowDiv.appendChild(cancelDiv);
+  consultationItem.appendChild(rowDiv);
+  daysUntilDiv.appendChild(daysUntilSpan);
+  bookingIdDiv.appendChild(bookingIdSpan);
+
+  // Append the consultation item to the consultation list
+  const consultationList = document.getElementById('upcomingConsultations');
+  consultationList.appendChild(consultationItem);
+}
+
+function deleteConsult(id) {
+  $.ajax({
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({ bookingID: id }),
+    url: './studentDeleteBooking' // URL that the POST is sent to
+  }).done(function (res) {
+    if (res.status === 'Completed') {
+      alert(`Booking: "${id}" has been deleted`)
+      getAllConsults()
+    }
+  })
+}
+
+function deleteAllConsultations() {
+  const consultationList = document.getElementById('upcomingConsultations');
+  while (consultationList.firstChild) {
+    consultationList.firstChild.remove();
+  }
+}
+

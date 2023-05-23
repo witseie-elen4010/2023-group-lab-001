@@ -2,7 +2,7 @@
 
 const pool = require('./db_connection')
 
-function isValidDate (dateString) {
+function isValidDate(dateString) {
   // Create a new Date object from the date string.
   const date = new Date(dateString)
   if (isNaN(date) || isNaN(date.getFullYear()) || isNaN(date.getMonth()) || isNaN(date.getDate())) {
@@ -30,7 +30,7 @@ function isValidDate (dateString) {
 }
 
 // Function to retrieve all events from the database
-async function getAllEvents () {
+async function getAllEvents() {
   try {
     const events = await pool.promise().query('SELECT p.Name AS PersonName, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.Id AS EventId FROM event e JOIN person p ON e.PersonId = p.Id;') // Adjust the SQL query based on your table name and structure
     return events
@@ -40,13 +40,28 @@ async function getAllEvents () {
   }
 }
 
+async function getAllConsults(personId) {
+  try {
+    // Use prepared statements to sanitize inputs to protect from SQL injection attacks
+    const query = 'SELECT e.StartTime, e.StartDate, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?'
+    const [results] = await pool.promise().query(query, [personId])
+    // console.log(results)
+    return results
+  } catch (error) {
+    console.error('Error retrieving events:', error)
+    throw error
+  }
+}
+
 // Function to add an event booking to the database
-async function addEventBooking (eventId, personId, Date) {
+async function addEventBooking(eventId, personId, Date) {
+  personId = parseInt(personId)
   if (!eventId || typeof eventId !== 'number') {
     throw new Error('Invalid eventId')
   }
 
   if (!personId || typeof personId !== 'number') {
+    console.log(typeof personId)
     throw new Error('Invalid personId')
   }
 
@@ -72,5 +87,6 @@ async function addEventBooking (eventId, personId, Date) {
 // Export the getAllEvents function to be used in mainRoutes.js
 module.exports = {
   getAllEvents,
-  addEventBooking
+  addEventBooking,
+  getAllConsults
 }
