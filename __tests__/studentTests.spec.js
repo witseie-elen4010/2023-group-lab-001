@@ -104,3 +104,42 @@ describe('getAllConsults', () => {
     require('../db_connection').promise.mockClear() // Reset the promise mock before each test case
     require('../db_connection').query.mockClear() // Reset the query mock before each test case
   })
+
+  test('should retrieve all consultations from the database', async () => {
+    // Mock the query result
+    const mockEvents = ['event1', 'event2', 'event3']
+    const mockQuery = jest.fn().mockResolvedValueOnce(mockEvents)
+    require('../db_connection').query.mockImplementationOnce(mockQuery)
+
+    const personId = 41 // Set the personId value
+
+    const consults = await getAllConsults(personId)
+
+    // Assertions
+    expect(require('../db_connection').promise).toHaveBeenCalledTimes(1)
+    expect(mockQuery).toHaveBeenCalledTimes(1)
+    expect(mockQuery).toHaveBeenCalledWith(
+      'SELECT e.StartTime, e.StartDate, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
+      [personId]
+    )
+    expect(consults).toEqual(mockEvents[0])
+  })
+})
+
+test('should throw an error if there is an error retrieving events', async () => {
+  // Mock the query to throw an error
+  const mockError = new Error('Failed to retrieve events')
+  const mockQuery = jest.fn().mockRejectedValueOnce(mockError)
+  require('../db_connection').query.mockImplementationOnce(mockQuery)
+
+  const personId = 41 // Set the personId value
+
+  await expect(getAllConsults(personId)).rejects.toThrow(mockError)
+
+  // Assertions
+  expect(mockQuery).toHaveBeenCalledTimes(1)
+  expect(mockQuery).toHaveBeenCalledWith(
+    'SELECT e.StartTime, e.StartDate, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
+    [personId]
+  )
+})
