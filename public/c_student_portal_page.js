@@ -59,79 +59,6 @@ async function bookEvent (EventId, EventDate) {
   }
 }
 
-// Generate HTML table dynamically
-function generateTable (events) {
-  const table = document.createElement('table')
-  table.id = 'openConsultationTable'
-  table.classList.add('table', 'table-striped')
-
-  const thead = document.createElement('thead')
-  thead.classList.add('thead-dark')
-
-  const tbody = document.createElement('tbody')
-
-  const keyToTitleName = {
-    PersonName: 'Lecturer:',
-    EventDescription: 'Description:',
-    EventStartTime: 'Time',
-    EventDate: 'Date',
-    EventDuration: 'Duration of consultation'
-  }
-  const wantedKeys = Object.keys(keyToTitleName)
-
-  // Create table header row
-  const headerRow = document.createElement('tr')
-  Object.keys(events[0][0]).forEach(key => {
-    if (wantedKeys.includes(key)) {
-      const th = document.createElement('th')
-      th.textContent = keyToTitleName[key]
-      headerRow.appendChild(th)
-    }
-  })
-  thead.appendChild(headerRow)
-
-  // Create table body rows
-  events[0].forEach(event => {
-    const row = document.createElement('tr')
-    Object.entries(event).forEach(([key, value]) => {
-      if (wantedKeys.includes(key)) {
-        const cell = document.createElement('td')
-
-        if (key === 'EventDate') {
-          const firstOccurrence = new Date(value)
-          const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
-          const dateString = firstOccurrence.toLocaleDateString('en-US', options)
-
-          cell.textContent = dateString
-        } else {
-          cell.textContent = value
-        }
-
-        row.appendChild(cell)
-      }
-    })
-
-    // Create a button element
-    const buttonCell = document.createElement('td')
-    const bookButton = document.createElement('button')
-    bookButton.textContent = 'Book'
-    bookButton.classList.add('btn', 'btn-primary')
-    // Add event listener to the button
-    bookButton.addEventListener('click', function () {
-      bookEvent(event.EventId, event.EventDate)
-    })
-    buttonCell.appendChild(bookButton)
-    row.appendChild(buttonCell)
-
-    tbody.appendChild(row)
-  })
-
-  // Append thead and tbody to the table
-  table.appendChild(thead)
-  table.appendChild(tbody)
-
-  return table
-}
 function sortEvents (events) {
   events[0].sort((a, b) => {
     const dateA = new Date(a.EventDate)
@@ -213,7 +140,7 @@ function getFilterEvents (allEvents) {
 }
 
 // Generate HTML table dynamically
-function generateTableV2 (events) {
+function generateTable (events) {
   const table = document.createElement('table')
   table.id = 'openConsultationTable'
   table.classList.add('table', 'table-striped')
@@ -309,11 +236,11 @@ function getAllEvents () {
           // Sort events by which ones are closer
           sortEvents(events)
 
-          // Get the container element to display the table
-          const container = document.getElementById('tableContainer')
+          // // Get the container element to display the table
+          // const container = document.getElementById('tableContainer')
 
-          // Generate the table and append it to the container
-          container.appendChild(generateTable(events))
+          // // Generate the table and append it to the container
+          // container.appendChild(generateTable(events))
           resolve(events[0])
         } else {
           alert('Error retrieving events.')
@@ -336,6 +263,10 @@ getAllEvents()
   .then(function (result) {
     allEvents = result
   })
+  .then(function () {
+    const container = document.getElementById('tableContainer')
+    container.appendChild(generateTable(allEvents))
+  })
   .catch(function (error) {
     console.error('Error:', error) // Handle the rejected error here
   })
@@ -353,7 +284,7 @@ function generateFilteredEventTable () {
   // Get the container element to display the table
   const container = document.getElementById('tableContainer')
   // Generate the table and append it to the container
-  container.appendChild(generateTableV2(filteredEvents))
+  container.appendChild(generateTable(filteredEvents))
 }
 function getAllConsults () {
   $.ajax({
