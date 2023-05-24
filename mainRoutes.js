@@ -162,4 +162,12 @@ mainRouter.post('/lecDeleteBooking', authMiddleware('teacher'), async function (
   res.send(result)
 })
 
+mainRouter.get('/logout', function(req, res) {
+  // Clear the token cookie
+  res.clearCookie('token');
+  res.clearCookie('userID');
+  // Redirect to the signup_login page
+  return res.redirect('/');
+});
+
 module.exports = mainRouter
