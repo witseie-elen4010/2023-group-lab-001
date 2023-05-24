@@ -467,7 +467,7 @@ function deleteConsult (id) {
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify({ bookingID: id }),
-    url: './lecDeleteBooking' // URL that the POST is sent to
+    url: './studentDeleteBooking' // URL that the POST is sent to
   }).done(function (res) {
     if (res.status === 'Completed') {
       alert(`Booking: "${id}" has been deleted`)

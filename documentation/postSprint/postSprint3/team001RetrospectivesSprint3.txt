@@ -1,0 +1,32 @@
+A meeting of Consulta was held on Microsoft Teams on 2023/05/23
+
+Attendees:
+	- Asher Radowsky
+	- Liad Peretz
+	- Josh Shapiro
+	- Elli Joffe
+
+Sprint 3 velocity: 25 points across 6 stories (9 dev sized stories delivered out of 9)
+
+Activities performed well:
+
+- Splitting up of coding tasks amongst devs
+- Timeous completion of coding activities
+- Trunk integrity maintained well
+- Code review process well organized and completed
+- All user stories delivered
+
+Activities performed suboptimally:
+
+- Some merge conflicts
+- More testing can be done
+
+Improvements to be made:
+
+- Implement a little more testing as code is written
+
+LARGE DESIGN CHOICE MADE:
+
+- Event table in database is restructured such that each event can only exist on one day of the week (including recurring weeks).
+ This is done to simplify the booking process, as well as to make the editing and displaying of event bookings more straightforward. Code
+ which deals with this table was updated timeously such that the trunk integrity was maintained.

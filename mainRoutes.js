@@ -127,7 +127,7 @@ mainRouter.get('/consults', authMiddleware('student'), async function (req, res)
   }
 })
 
-mainRouter.post('/lecDeleteBooking', authMiddleware('student'), async function (req, res) {
+mainRouter.post('/studentDeleteBooking', authMiddleware('student'), async function (req, res) {
   res.type('application/json')
   const bookingID = req.body.bookingID
   const result = await lecDeleteUpcomingBooking.lecDeleteBooking(bookingID)
@@ -161,5 +161,13 @@ mainRouter.post('/lecDeleteBooking', authMiddleware('teacher'), async function (
   console.log(result)
   res.send(result)
 })
+
+mainRouter.get('/logout', function(req, res) {
+  // Clear the token cookie
+  res.clearCookie('token');
+  res.clearCookie('userID');
+  // Redirect to the signup_login page
+  return res.redirect('/');
+});
 
 module.exports = mainRouter
