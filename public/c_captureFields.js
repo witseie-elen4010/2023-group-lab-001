@@ -115,7 +115,7 @@ document.getElementById('save-chages').addEventListener('click', () => {
     consultationSummaryString += 'Yes' + '<br />' + 'Number of recurring weeks: ' + recurringWeeks + '<br />' +
       'Effective end date: ' + endDate.toString().substr(0, 15)
   } else {
-    recurringWeeks = 0
+    recurringWeeks = 1
     endDate = new Date(startDate)
     consultationSummaryString += 'No'
   }
@@ -140,24 +140,8 @@ document.getElementById('save-chages').addEventListener('click', () => {
     recurringWeeksSet = 0
     console.log('Recurring Weeks: ' + (Number(recurringWeeks)))
 
-    /*if (Number(recurringWeeks) === 0) {
-      console.log(formattedStartDate)
-      $.ajax({
-        type: 'POST',
-        contentType: 'application/json', // header property of http request, which tells the server what type of data to
-        // expect in the BODY of the POST message (standard is plaintext)
-        data: JSON.stringify({ dow, formattedStartDate, endDate, startTime, endTime, duration, recurringWeeksSet, maxConsultStudents, description }), // data sent (converted to JSON)
-        url: './dashboard' // URL that the POST is sent to
-      }).done(function (res) {
-        console.log('DONE')
-        $('#consultationSummary').modal('hide')
-
-      })
-    }
-
-
-    else {
-      for (let i = 0; i < (Number(recurringWeeks)); i++) {
+    for (let i = 0; i < Number(recurringWeeks); i++)
+    {
         tempStartDate = new Date(startDate)
         tempStartDate.setDate(tempStartDate.getDate() + (i * 7))
         formattedStartDate = tempStartDate.toISOString().split('T')[0]
@@ -165,8 +149,6 @@ document.getElementById('save-chages').addEventListener('click', () => {
         endDate.setDate(endDate.getDate() + (i * 7))
         endDate = endDate.toISOString().split('T')[0]
         console.log(i)
-
-
 
         $.ajax({
           type: 'POST',
@@ -180,10 +162,6 @@ document.getElementById('save-chages').addEventListener('click', () => {
 
         })
       }
-    }*/
-
-
-    
 
 
     alert(`Consultation: ${description} created!`)
