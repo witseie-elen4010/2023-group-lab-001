@@ -51,12 +51,13 @@ function deleteConsultation(id) {
 }
 
 document.getElementById('save-chages').addEventListener('click', () => {
-  // Get form values
-  let startDate = new Date(document.getElementById('day-of-month').value)
 
+  // Get form values
+  const startDate = new Date(document.getElementById('day-of-month').value)
+
+  //Make sure a lecturer can't create a consultation on a day which has already passed.
   let currentDate = new Date()
-  if(startDate.toDateString() > currentDate.toDateString())
-  {
+  if (startDate.toDateString() > currentDate.toDateString()) {
     alert('This date has already passed. Please reselect consultation date')
     return
   }
@@ -73,17 +74,18 @@ document.getElementById('save-chages').addEventListener('click', () => {
   const endTime = document.getElementById('end-time').value
 
   //Check end time is valid:
-  if(new Date('1970/01/01 ' + endTime) <= new Date('1970/01/01 ' + startTime))
-  {
+  if (new Date('1970/01/01 ' + endTime) <= new Date('1970/01/01 ' + startTime)) {
     alert('Cannot end a consultation before it starts. \nPlease reselect end time')
     return
   }
-  //IDK WHY THIS DOESNT WORK
+
+  //IDK WHY THIS DOESNT WORK so for now it allows a consulation to end at the same time it starts but not before
+
   //else if((new Date('1970/01/01 ' + endTime)).getDate() === (new Date('1970/01/01 ' + startTime)).getDate())
   //{
-    //alert('Cannot end a consultation at the same time as it starts. \nPlease reselect end time')
-    //alert((new Date('1970/01/01 ' + endTime)).getDate())
-    //return
+  //alert('Cannot end a consultation at the same time as it starts. \nPlease reselect end time')
+  //alert((new Date('1970/01/01 ' + endTime)).getDate())
+  //return
   //}
 
 
@@ -127,23 +129,57 @@ document.getElementById('save-chages').addEventListener('click', () => {
   const dow = startDate.toString().substring(0, 3)
   // console.log(dow)
 
-  startDate = startDate.toISOString().split('T')[0]
+  formattedStartDate = startDate.toISOString().split('T')[0]
   endDate = endDate.toISOString().split('T')[0]
 
   // Create consulation button sends request with data to insert
   document.getElementById('create-consultation').addEventListener('click', () => {
-    // console.log('Created consultation')
 
-    $.ajax({
-      type: 'POST',
-      contentType: 'application/json', // header property of http request, which tells the server what type of data to
-      // expect in the BODY of the POST message (standard is plaintext)
-      data: JSON.stringify({ dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description }), // data sent (converted to JSON)
-      url: './dashboard' // URL that the POST is sent to
-    }).done(function (res) {
-      console.log('DONE')
-      $('#consultationSummary').modal('hide')
-    })
+    recurringWeeksSet = 0
+    console.log('Recurring Weeks: ' + (Number(recurringWeeks)))
+
+    if (Number(recurringWeeks) === 0) {
+      console.log(formattedStartDate)
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json', // header property of http request, which tells the server what type of data to
+        // expect in the BODY of the POST message (standard is plaintext)
+        data: JSON.stringify({ dow, formattedStartDate, endDate, startTime, endTime, duration, recurringWeeksSet, maxConsultStudents, description }), // data sent (converted to JSON)
+        url: './dashboard' // URL that the POST is sent to
+      }).done(function (res) {
+        console.log('DONE')
+        $('#consultationSummary').modal('hide')
+
+      })
+    }
+
+
+    else {
+      for (let i = 0; i < (Number(recurringWeeks)); i++) {
+        tempStartDate = new Date(startDate)
+        tempStartDate.setDate(tempStartDate.getDate() + (i * 7))
+        formattedStartDate = tempStartDate.toISOString().split('T')[0]
+        endDate = new Date(startDate)
+        endDate.setDate(endDate.getDate() + (i * 7))
+        endDate = endDate.toISOString().split('T')[0]
+        console.log(i)
+
+        
+
+        $.ajax({
+          type: 'POST',
+          contentType: 'application/json', // header property of http request, which tells the server what type of data to
+          // expect in the BODY of the POST message (standard is plaintext)
+          data: JSON.stringify({ dow, formattedStartDate, endDate, startTime, endTime, duration, recurringWeeksSet, maxConsultStudents, description }), // data sent (converted to JSON)
+          url: './dashboard' // URL that the POST is sent to
+        }).done(function (res) {
+          console.log('DONE')
+          $('#consultationSummary').modal('hide')
+
+        })
+      }
+    }
+    alert(`Consultation: ${description} created!`)
   })
 })
 
@@ -157,7 +193,6 @@ numWeeksToRecur.style.display = displayType
 document.getElementById('recurring-yes').addEventListener('click', () => {
   displayType = ''
   numWeeksToRecur.style.display = displayType
-  // console.log('Yes')
 })
 
 document.getElementById('recurring-no').addEventListener('click', () => {
