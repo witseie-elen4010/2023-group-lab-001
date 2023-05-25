@@ -54,6 +54,13 @@ document.getElementById('save-chages').addEventListener('click', () => {
   // Get form values
   let startDate = new Date(document.getElementById('day-of-month').value)
 
+  let currentDate = new Date()
+  if(startDate.toDateString() > currentDate.toDateString())
+  {
+    alert('This date has already passed. Please reselect consultation date')
+    return
+  }
+
   // NEED TO ADD ERROR HANDLING OR PRESET TO NO
   const recurringOption = document.querySelector('input[name="recurring"]:checked').value
 
@@ -64,6 +71,22 @@ document.getElementById('save-chages').addEventListener('click', () => {
 
   const startTime = document.getElementById('start-time').value
   const endTime = document.getElementById('end-time').value
+
+  //Check end time is valid:
+  if(new Date('1970/01/01 ' + endTime) <= new Date('1970/01/01 ' + startTime))
+  {
+    alert('Cannot end a consultation before it starts. \nPlease reselect end time')
+    return
+  }
+  //IDK WHY THIS DOESNT WORK
+  //else if((new Date('1970/01/01 ' + endTime)).getDate() === (new Date('1970/01/01 ' + startTime)).getDate())
+  //{
+    //alert('Cannot end a consultation at the same time as it starts. \nPlease reselect end time')
+    //alert((new Date('1970/01/01 ' + endTime)).getDate())
+    //return
+  //}
+
+
   const maxConsultStudents = document.getElementById('max-consults-students').value
   let recurringWeeks = document.getElementById('num-weeks-recurring').value
   const description = document.getElementById('description').value
