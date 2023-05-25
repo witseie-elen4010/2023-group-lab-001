@@ -57,7 +57,10 @@ document.getElementById('save-chages').addEventListener('click', () => {
 
   //Make sure a lecturer can't create a consultation on a day which has already passed.
   let currentDate = new Date()
-  if (startDate.toDateString() > currentDate.toDateString()) {
+  console.log('Start Date:' + startDate.toISOString().substring(0, 10))
+  console.log('Current Date:' + currentDate.toISOString().substring(0, 10))
+
+  if (startDate.toISOString().substring(0, 10) < currentDate.toISOString().substring(0, 10)) {
     alert('This date has already passed. Please reselect consultation date')
     return
   }
@@ -74,19 +77,18 @@ document.getElementById('save-chages').addEventListener('click', () => {
   const endTime = document.getElementById('end-time').value
 
   //Check end time is valid:
-  if (new Date('1970/01/01 ' + endTime) <= new Date('1970/01/01 ' + startTime)) {
+  if (new Date('1970/01/01 ' + endTime) < new Date('1970/01/01 ' + startTime)) {
     alert('Cannot end a consultation before it starts. \nPlease reselect end time')
     return
   }
 
   //IDK WHY THIS DOESNT WORK so for now it allows a consulation to end at the same time it starts but not before
 
-  //else if((new Date('1970/01/01 ' + endTime)).getDate() === (new Date('1970/01/01 ' + startTime)).getDate())
-  //{
-  //alert('Cannot end a consultation at the same time as it starts. \nPlease reselect end time')
-  //alert((new Date('1970/01/01 ' + endTime)).getDate())
-  //return
-  //}
+  else if ((new Date('1970/01/01 ' + endTime)).toISOString() == (new Date('1970/01/01 ' + startTime)).toISOString()) {
+    alert('Cannot end a consultation at the same time as it starts. \nPlease reselect end time')
+
+    return
+  }
 
 
   const maxConsultStudents = document.getElementById('max-consults-students').value
@@ -138,7 +140,7 @@ document.getElementById('save-chages').addEventListener('click', () => {
     recurringWeeksSet = 0
     console.log('Recurring Weeks: ' + (Number(recurringWeeks)))
 
-    if (Number(recurringWeeks) === 0) {
+    /*if (Number(recurringWeeks) === 0) {
       console.log(formattedStartDate)
       $.ajax({
         type: 'POST',
@@ -164,7 +166,7 @@ document.getElementById('save-chages').addEventListener('click', () => {
         endDate = endDate.toISOString().split('T')[0]
         console.log(i)
 
-        
+
 
         $.ajax({
           type: 'POST',
@@ -178,7 +180,12 @@ document.getElementById('save-chages').addEventListener('click', () => {
 
         })
       }
-    }
+    }*/
+
+
+    
+
+
     alert(`Consultation: ${description} created!`)
   })
 })
