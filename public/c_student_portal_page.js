@@ -146,7 +146,9 @@ function generateTable (events) {
   table.classList.add('table', 'table-striped')
 
   const thead = document.createElement('thead')
-  thead.classList.add('thead-dark')
+  thead.style.backgroundColor = '#fff'
+  thead.style.color = '#000'
+  // thead.classList.add('thead-dark')
 
   const tbody = document.createElement('tbody')
 
