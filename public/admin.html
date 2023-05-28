@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script defer src="c_admin.js"></script>
+
+    <style>
+        .logo-container {
+            width: 400px;
+            margin-top: -100px;
+            margin-bottom: -150px;
+        }
+
+        .container-fluid {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .log-entry {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .log-entry p {
+            margin: 0;
+        }
+
+        .log-entry .name,
+        .log-entry .role,
+        .log-entry .action,
+        .log-entry .timestamp {
+            font-weight: bold;
+            color: #1a73e8;
+
+        }
+
+        .log-entry .value {
+            color: #666;
+        }
+        #logData {
+        margin-top: 60px; 
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid"> <!-- create container for the consultation list -->
+        <div class="logo-container mx-auto">
+            <img src="logo.png" alt="Consulta logo" class="img-fluid">
+        </div>
+        <div style="position: relative;">
+            <h1 class="text-center my-5">Admin Dashboard</h1>
+            <button onclick="location.href='/logout'" style="position: absolute; top: 20%; right: 0;"
+                class="btn btn-secondary">Logout</button>
+        </div>
+
+        <div id="logData">
+            <!-- log data will be populated here -->
+        </div>
+</body>
+
+</html>

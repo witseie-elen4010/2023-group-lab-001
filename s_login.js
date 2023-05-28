@@ -23,6 +23,7 @@ async function checkCredentials(email, enteredPassword) {
          } else if (user.Role === 'teacher') {
             redirectUrl = './lecturer_dashboard';
          }
+         else{redirectUrl = './admin';}
          return { href: redirectUrl, status: 'Valid', userID: user.Id};
       } 
    }
