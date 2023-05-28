@@ -330,65 +330,55 @@ function processConsults(res) {
 
 getAllConsults() // call the function to get all the consultations
 
-function showConsultation(name, date, time, daysUntil, bookingId) {
+function showConsultation(name, date, time, duration, daysUntil, bookingId, description) {
   // Create a new list item for the consultation
   const consultationItem = document.createElement('li')
-  consultationItem.classList.add('list-group-item')
+  consultationItem.classList.add('list-group-item', 'mb-3')
 
-  // Create the row divs for name, date, time, days until, and cancel button
-  const rowDiv = document.createElement('div')
-  rowDiv.classList.add('row')
+  // Check if it's an alternate consultation item
+  const isAlternate = document.querySelectorAll('.list-group-item').length % 2 === 0
+  if (isAlternate) {
+    consultationItem.classList.add('alternate') // Add 'alternate' class to alternate items
+  }
 
-  const detailsDiv = document.createElement('div')
-  detailsDiv.classList.add('col-md-6')
+  // Create a table for the consultation details
+  const table = document.createElement('table')
+  table.classList.add('table')
 
-  const nameHeading = document.createElement('h5')
-  nameHeading.textContent = 'Lecturer:'
-  detailsDiv.appendChild(nameHeading)
+  // Create table rows for each detail
+  const rows = [
+    { label: 'Lecturer:', value: name },
+    { label: 'Date:', value: date },
+    { label: 'Start Time:', value: time },
+    { label: 'Duration (minutes):', value: duration },
+    { label: 'Description:', value: description },
+    { label: 'Days Until Consultation:', value: daysUntil }
+  ]
 
-  const nameDiv = document.createElement('div')
-  nameDiv.textContent = name
-  detailsDiv.appendChild(nameDiv)
+  rows.forEach((row) => {
+    const tr = document.createElement('tr')
 
-  const dateHeading = document.createElement('h5')
-  dateHeading.textContent = 'Date: '
-  detailsDiv.appendChild(dateHeading)
+    const labelTd = document.createElement('td')
+    const labelStrong = document.createElement('strong')
+    labelStrong.textContent = row.label
+    labelTd.appendChild(labelStrong)
 
-  const dateDiv = document.createElement('div')
-  dateDiv.textContent = date
-  detailsDiv.appendChild(dateDiv)
+    const valueTd = document.createElement('td')
+    valueTd.classList.add('text-start', 'pe-3') // Align value to the left with right padding
+    valueTd.style.width = '40%' // Set a relative width for the value column
+    valueTd.textContent = row.value
 
-  const timeHeading = document.createElement('h5')
-  timeHeading.textContent = 'Time: '
-  detailsDiv.appendChild(timeHeading)
+    tr.appendChild(labelTd)
+    tr.appendChild(valueTd)
+    table.appendChild(tr)
+  })
 
-  const timeDiv = document.createElement('div')
-  timeDiv.textContent = time
-  detailsDiv.appendChild(timeDiv)
+  // Create a row for the cancel button
+  const cancelButtonRow = document.createElement('tr')
 
-  const daysUntilDiv = document.createElement('div')
-  daysUntilDiv.classList.add('col-md-2')
-
-  const daysUntilHeading = document.createElement('h5')
-  daysUntilHeading.textContent = 'Days Until Consultation:'
-  daysUntilDiv.appendChild(daysUntilHeading)
-
-  const daysUntilSpan = document.createElement('span')
-  daysUntilSpan.classList.add('days-until')
-  daysUntilSpan.textContent = daysUntil // Set the daysUntil value as the content of the span element
-
-  const bookingIdDiv = document.createElement('div')
-  bookingIdDiv.classList.add('col-md-1')
-
-  const bookingIdHeading = document.createElement('h5')
-  bookingIdHeading.textContent = 'Booking ID:'
-  bookingIdDiv.appendChild(bookingIdHeading)
-
-  const bookingIdSpan = document.createElement('span')
-  bookingIdSpan.textContent = bookingId // Set the bookingId value as the content of the span element
-
-  const cancelDiv = document.createElement('div')
-  cancelDiv.classList.add('col-md-3', 'text-right')
+  const cancelButtonCell = document.createElement('td')
+  cancelButtonCell.setAttribute('colspan', '2')
+  cancelButtonCell.classList.add('text-end') // Align button to the right
 
   const cancelButton = document.createElement('button')
   cancelButton.classList.add('btn', 'btn-danger')
@@ -401,15 +391,12 @@ function showConsultation(name, date, time, daysUntil, bookingId) {
     deleteConsult(bookingId)
   })
 
-  // Append elements to their respective parent elements
-  cancelDiv.appendChild(cancelButton)
-  rowDiv.appendChild(detailsDiv)
-  rowDiv.appendChild(daysUntilDiv)
-  rowDiv.appendChild(bookingIdDiv)
-  rowDiv.appendChild(cancelDiv)
-  consultationItem.appendChild(rowDiv)
-  daysUntilDiv.appendChild(daysUntilSpan)
-  bookingIdDiv.appendChild(bookingIdSpan)
+  cancelButtonCell.appendChild(cancelButton)
+  cancelButtonRow.appendChild(cancelButtonCell)
+  table.appendChild(cancelButtonRow)
+
+  // Append the table to the consultation item
+  consultationItem.appendChild(table)
 
   // Append the consultation item to the consultation list
   const consultationList = document.getElementById('upcomingConsultations')
