@@ -238,11 +238,6 @@ function getAllEvents () {
           // Sort events by which ones are closer
           sortEvents(events)
 
-          // // Get the container element to display the table
-          // const container = document.getElementById('tableContainer')
-
-          // // Generate the table and append it to the container
-          // container.appendChild(generateTable(events))
           resolve(events[0])
         } else {
           alert('Error retrieving events.')
@@ -259,20 +254,6 @@ function getAllEvents () {
 
 let allEvents
 
-// Call the getAllEvents function to initiate the request
-// Usage of getAllEvents() with promise
-getAllEvents()
-  .then(function (result) {
-    allEvents = result
-  })
-  .then(function () {
-    const container = document.getElementById('tableContainer')
-    container.appendChild(generateTable(allEvents))
-  })
-  .catch(function (error) {
-    console.error('Error:', error) // Handle the rejected error here
-  })
-
 function removeTable () {
   // Step 1: Get a reference to the table element
   const table = document.getElementById('openConsultationTable')
@@ -280,20 +261,33 @@ function removeTable () {
   // Step 2: Remove all existing rows from the table
   table.remove()
 }
-function generateFilteredEventTable () {
-  removeTable()
-  const filteredEvents = getFilterEvents(allEvents)
-  // Get the container element to display the table
-  const container = document.getElementById('tableContainer')
-  // Generate the table and append it to the container
-  container.appendChild(generateTable(filteredEvents))
+
+function filterAlreadyBookedConsultations (events, bookedConsulations) {
+  function extractAttribute (arr, attributeName) {
+    return arr.map(obj => obj[attributeName])
+  }
+  const bookedBookingIds = extractAttribute(bookedConsulations, 'eventId')
+
+  function deleteAlreadyBookedEvents (events, bookedConsulationIds) {
+    const filteredEvents = []
+    for (let i = 0; i < events.length; i++) {
+      if (!(bookedConsulationIds.includes(events[i].EventId))) {
+        filteredEvents.push(events[i])
+      }
+    }
+    return filteredEvents
+  }
+  return deleteAlreadyBookedEvents(events, bookedBookingIds)
 }
+
+let allConsultations
 function getAllConsults () {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
     url: './consults'
   }).done(function (res) {
+    allConsultations = res
     const currentDate = new Date() // Get the current date
     for (let i = 0; i < res.length; i++) {
       const startDate = res[i].StartDate
@@ -308,6 +302,39 @@ function getAllConsults () {
 }
 
 getAllConsults()
+
+function generateFilteredEventTable () {
+  try {
+    removeTable()
+  } catch (error) {
+    // console.log('Error with removing booking consultation table: ')
+    // console.log(error)
+  }
+  const availableEvents = filterAlreadyBookedConsultations(allEvents, allConsultations)
+  const filteredEvents = getFilterEvents(availableEvents)
+
+  if (filteredEvents.length !== 0) {
+    // Get the container element to display the table
+    const container = document.getElementById('tableContainer')
+    // Generate the table and append it to the container
+    container.appendChild(generateTable(filteredEvents))
+  }
+}
+
+// Call the getAllEvents function to initiate the request
+// Usage of getAllEvents() with promise
+getAllEvents()
+  .then(function (result) {
+    allEvents = result
+  })
+  .then(function () {
+    const container = document.getElementById('tableContainer')
+    const unbookedEvents = filterAlreadyBookedConsultations(allEvents, allConsultations)
+    container.appendChild(generateTable(unbookedEvents))
+  })
+  .catch(function (error) {
+    console.error('Error:', error) // Handle the rejected error here
+  })
 
 function showConsultation (name, date, time, daysUntil, bookingId) {
   // Create a new list item for the consultation
