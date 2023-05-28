@@ -10,14 +10,16 @@ jest.mock('bcrypt', () => ({
 }));
 jest.mock('../db_connection', () => ({
     promise: jest.fn().mockReturnThis(),
-    query: jest.fn(),
+    query: jest.fn().mockResolvedValue([{ insertId: 1, affectedRows: 1 }]),
 }));
 
 describe('Signup functionality', () => {
-    afterEach(() => {
-        // Clear all instances and calls to constructor and all methods:
-        pool.query.mockClear();
-    });
+    beforeEach(() => {
+        // Reset the mock functions
+        bcrypt.compare.mockReset();
+        pool.query.mockReset();
+     });
+   
 
     test('adds new student correctly to the database', async () => {
         const mockUser = {
@@ -31,13 +33,11 @@ describe('Signup functionality', () => {
         bcrypt.hash.mockResolvedValueOnce(mockHashedPassword);
         
         // Mock the return value of the pool's query function
-        pool.query.mockResolvedValueOnce([{
-          ...mockUser,
-          Role: mockUser.role,
-          Name: mockUser.name,
-          Email: mockUser.email,
-          Password: mockHashedPassword,  // the returned password should now be the hashed password
-        }]);
+        pool.query.mockResolvedValueOnce([[{ insertId: 1, affectedRows: 1 }]])
+      .mockResolvedValueOnce([[{ id: 1 }]]);
+
+
+
       
         const res = await addUser(mockUser.name, mockUser.email, mockUser.password, mockUser.role);
       
@@ -66,13 +66,11 @@ describe('Signup functionality', () => {
         bcrypt.hash.mockResolvedValueOnce(mockHashedPassword);
 
         // Mock the return value of the pool's query function
-        pool.query.mockResolvedValueOnce([{
-            ...mockUser,
-            Role: mockUser.role,
-            Name: mockUser.name,
-            Email: mockUser.email,
-            Password: mockHashedPassword,
-        }]);
+        pool.query.mockResolvedValueOnce([[{ insertId: 1, affectedRows: 1 }]])
+      .mockResolvedValueOnce([[{ id: 1 }]]);
+
+
+
 
         const res = await addUser(mockUser.name, mockUser.email, mockUser.password, mockUser.role);
 
@@ -105,6 +103,11 @@ describe('Signup functionality', () => {
         // Assertions
         expect(res.status).toBe('Invalid');
         expect(res.message).toBe('Email already taken');
+    });
+
+    afterEach(() => {
+        // Clear all instances and calls to constructor and all methods:
+        pool.query.mockClear();
     });
 
 });

@@ -46,7 +46,10 @@ async function addUser(name, email, password, role) {
             return { status: 'Invalid', message: 'Email already taken' };
         }
         // handle other errors as needed
+        console.error(error);
+        return { status: 'Invalid', message: 'Invalid Signup' };
     }
+    
 }
 
 
