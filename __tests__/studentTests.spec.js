@@ -111,11 +111,11 @@ describe('getAllConsults', () => {
 
   test('should retrieve all consultations from the database', async () => {
     // Mock the query result
-    const mockConsults = ['consult1', 'consult2', 'consult3']
+    const mockConsults = ['consult1']
     const mockQuery = jest.fn().mockResolvedValueOnce(mockConsults)
     require('../db_connection').query.mockImplementationOnce(mockQuery)
 
-    const personId = 41 // Set the personId value
+    const personId = 48 // Set the personId value
 
     const consults = await getAllConsults(personId)
 
@@ -123,7 +123,7 @@ describe('getAllConsults', () => {
     expect(require('../db_connection').promise).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledWith(
-      'SELECT e.StartTime, e.StartDate, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
+      'SELECT e.StartTime, e.Duration, e.StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
       [personId]
     )
     expect(consults).toEqual(mockConsults[0])
@@ -135,14 +135,14 @@ describe('getAllConsults', () => {
     const mockQuery = jest.fn().mockRejectedValueOnce(mockError)
     require('../db_connection').query.mockImplementationOnce(mockQuery)
 
-    const personId = 41 // Set the personId value
+    const personId = 48 // Set the personId value
 
     await expect(getAllConsults(personId)).rejects.toThrow(mockError)
 
     // Assertions
     expect(mockQuery).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledWith(
-      'SELECT e.StartTime, e.StartDate, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
+      'SELECT e.StartTime, e.Duration, e.StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
       [personId]
     )
   })

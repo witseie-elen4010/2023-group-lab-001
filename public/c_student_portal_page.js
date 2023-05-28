@@ -292,6 +292,7 @@ function getAllConsults() {
     url: './consults'
   }).done(function (res) {
     if (res.length > 0) {
+      console.log(res)
       processConsults(res)
     } else {
       // Display message when no consultations are found

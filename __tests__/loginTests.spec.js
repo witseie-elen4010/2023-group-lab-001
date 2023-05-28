@@ -20,7 +20,7 @@ describe('Test login functionality', () => {
       const mockUser = {
          email: 'teststudent@students.wits.ac.za',
          password: 'password'
-      };
+      }
 
       const mockHashedPassword = 'hashed_password'
 
@@ -45,7 +45,7 @@ describe('Test login functionality', () => {
       const mockUser = {
          email: 'wrongUser01@email.com',
          password: 'password'
-      };
+      }
 
       // Mock the return values of the external dependencies
       bcrypt.compare.mockImplementationOnce(() => Promise.resolve(true))
@@ -61,7 +61,7 @@ describe('Test login functionality', () => {
       const mockUser = {
          email: 'teststudent@students.wits.ac.za',
          password: 'wrongPassword'
-      };
+      }
 
       const mockHashedPassword = 'hashed_wrong_password'
 
@@ -85,7 +85,7 @@ describe('Test login functionality', () => {
       const mockUser = {
          email: 'johntest@wits.ac.za',
          password: 'teacher'
-      };
+      }
 
       const mockHashedPassword = 'hashed_password'
 
@@ -110,7 +110,7 @@ describe('Test login functionality', () => {
       const mockUser = {
          email: 'teststudent@students.wits.ac.za',
          password: 'password'
-      };
+      }
 
       const mockHashedPassword = 'hashed_password'
 
@@ -132,7 +132,6 @@ describe('Test login functionality', () => {
    })
 
    afterAll(() => {
-      pool.end() //Clear all open connections
+      pool.end() // Clear all open connections
    })
-
 })
