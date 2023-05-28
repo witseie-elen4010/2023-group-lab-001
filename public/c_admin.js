@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 const timestampElement = document.createElement('span');
                 const dateTime = logEntry.TimeStamp.replace('T', ' ').replace('Z', '');
                 const dateObj = new Date(dateTime);
-                dateObj.setHours(dateObj.getHours() + 4); // Convert to South African time (GMT+2)
+                dateObj.setHours(dateObj.getHours() + 2); // Convert to South African time (GMT+2)
                 const formattedDateTime = dateObj.toLocaleString('en-ZA'); // Format date and time to South African locale
                 timestampElement.innerHTML = `<span class="timestamp">Date and Time:</span> <span class="value">${formattedDateTime}</span>`;
                 div.appendChild(timestampElement);
