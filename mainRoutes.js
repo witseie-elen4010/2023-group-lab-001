@@ -139,8 +139,9 @@ mainRouter.post('/studentDeleteBooking', authMiddleware('student'), async functi
 mainRouter.post('/dashboard', authMiddleware('teacher'), async function (req, res) {
   userID = req.cookies.userID
   res.type('application/json')
-  const { dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description } = req.body
-  const result = await dashboard.createConsultation(userID, dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description)
+  const { dow, formattedStartDate, endDate, startTime, endTime, duration, recurringWeeksSet, maxConsultStudents, description } = req.body
+  console.log(formattedStartDate)
+  const result = await dashboard.createConsultation(userID, dow, formattedStartDate, endDate, startTime, endTime, duration, recurringWeeksSet, maxConsultStudents, description)
 
   res.send(result)
 })
