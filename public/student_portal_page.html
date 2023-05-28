@@ -51,6 +51,19 @@
         .calendar .today {
             background-color: #0056b3;
         }
+
+        .no-consultations {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .list-group-item.alternate {
+            background-color: #f5f5f5;
+            /* Set the background color for alternate items */
+        }
     </style>
 </head>
 
@@ -64,7 +77,8 @@
         <div class="container">
             <div style="position: relative;">
                 <h1 class="text-center my-3">Student Portal</h1>
-                <button onclick="location.href='/logout'" style="position: absolute; top: 20%; right: 0;" class="btn btn-secondary">Logout</button>
+                <button onclick="location.href='/logout'" style="position: absolute; top: 20%; right: 0;"
+                    class="btn btn-secondary">Logout</button>
             </div>
             <nav>
                 <ul class="nav">

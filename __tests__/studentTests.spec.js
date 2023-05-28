@@ -1,4 +1,4 @@
-const { getAllEvents, addEventBooking, getAllConsults, deleteBooking } = require('../s_student_page')
+const { getAllEvents, addEventBooking, getAllConsults } = require('../s_student_page')
 const { lecDeleteBooking } = require('../s_lecDeleteBooking')
 
 // Mock the database connection and queries

@@ -27,7 +27,7 @@ for (let day = 1; day <= 31; day++) {
 }
 
 // Function to handle event booking
-async function bookEvent (EventId, EventDate) {
+async function bookEvent(EventId, EventDate) {
   const date = new Date(EventDate)
   date.setDate(date.getDate() + 1)
   const formattedDate = date.toISOString().split('T')[0]
@@ -48,7 +48,7 @@ async function bookEvent (EventId, EventDate) {
 
     if (response.status === 'Success') {
       alert('Event booked successfully:\n' + 'Date: ' + bookingData.Date + '\nEvent Id: ' + bookingData.eventId)
-      deleteAllConsultations()
+      deleteAllConsultations() // reload page
       getAllConsults()
     } else {
       alert('Error booking event.')
@@ -59,7 +59,7 @@ async function bookEvent (EventId, EventDate) {
   }
 }
 
-function sortEvents (events) {
+function sortEvents(events) {
   events[0].sort((a, b) => {
     const dateA = new Date(a.EventDate)
     const dateB = new Date(b.EventDate)
@@ -76,7 +76,7 @@ function sortEvents (events) {
   })
 }
 
-function addMultipleWeekEvents (events) {
+function addMultipleWeekEvents(events) {
   const newEvents = [] // Separate array to hold newly generated events
 
   for (let i = 0; i < events[0].length; i++) {
@@ -96,7 +96,7 @@ function addMultipleWeekEvents (events) {
   return events
 }
 
-function generateLecturerOptions (events) {
+function generateLecturerOptions(events) {
   const listOfLecturers = []
   events[0].forEach(event => {
     Object.entries(event).forEach(([key, value]) => {
@@ -108,7 +108,7 @@ function generateLecturerOptions (events) {
   return new Set(listOfLecturers)
 }
 
-function generateHTMLLectuerOptions (listOfLecturers) {
+function generateHTMLLectuerOptions(listOfLecturers) {
   const dropdown = document.getElementById('lecturerDropDown')
   listOfLecturers.forEach(lecturer => {
     const lecturerOption = document.createElement('option')
@@ -117,7 +117,7 @@ function generateHTMLLectuerOptions (listOfLecturers) {
   })
 }
 
-function getFilterEvents (allEvents) {
+function getFilterEvents(allEvents) {
   if (allEvents) {
     const lecturerDropDown = document.getElementById('lecturerDropDown')
     const selectedLecturerOption = lecturerDropDown.options[lecturerDropDown.selectedIndex].text
@@ -140,7 +140,7 @@ function getFilterEvents (allEvents) {
 }
 
 // Generate HTML table dynamically
-function generateTable (events) {
+function generateTable(events) {
   const table = document.createElement('table')
   table.id = 'openConsultationTable'
   table.classList.add('table', 'table-striped')
@@ -213,7 +213,7 @@ function generateTable (events) {
   return table
 }
 
-function getAllEvents () {
+function getAllEvents() {
   return new Promise(function (resolve, reject) {
     $.ajax({
       type: 'GET',
@@ -224,7 +224,6 @@ function getAllEvents () {
           // Access the events data from the response
           let events = res.events
 
-          // Perform operations with the events data
           // Display or process the events data as needed
 
           // Display list of unique lecturers
@@ -271,14 +270,14 @@ getAllEvents()
     console.error('Error:', error) // Handle the rejected error here
   })
 
-function removeTable () {
+function removeTable() {
   // Step 1: Get a reference to the table element
   const table = document.getElementById('openConsultationTable')
 
   // Step 2: Remove all existing rows from the table
   table.remove()
 }
-function generateFilteredEventTable () {
+function generateFilteredEventTable() {
   removeTable()
   const filteredEvents = getFilterEvents(allEvents)
   // Get the container element to display the table
@@ -286,28 +285,52 @@ function generateFilteredEventTable () {
   // Generate the table and append it to the container
   container.appendChild(generateTable(filteredEvents))
 }
-function getAllConsults () {
+function getAllConsults() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
     url: './consults'
   }).done(function (res) {
-    const currentDate = new Date() // Get the current date
-    for (let i = 0; i < res.length; i++) {
-      const startDate = res[i].StartDate
-      const actualDate = startDate.substr(0, startDate.indexOf('T'))
-
-      const consultationDate = new Date(actualDate) // Convert the actualDate to a Date object
-      const daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 60 * 60 * 24)) // Calculate the number of days until the consultation
-
-      showConsultation(res[i].lecturerName, actualDate, res[i].StartTime, daysUntilConsultation, res[i].bookingId)
+    if (res.length > 0) {
+      processConsults(res)
+    } else {
+      // Display message when no consultations are found
+      const consultationList = document.getElementById('upcomingConsultations')
+      consultationList.innerHTML = '<div class="no-consultations">No upcoming consultations</div>'
     }
   })
 }
 
-getAllConsults()
+// function to sort consultations and retrieve correct information
+function processConsults(res) {
+  // Sort the events by date
+  res.sort(function (a, b) {
+    const dateA = new Date(a.StartDate)
+    const dateB = new Date(b.StartDate)
+    return dateA - dateB
+  })
 
-function showConsultation (name, date, time, daysUntil, bookingId) {
+  const currentDate = new Date() // Get the current date
+  for (let i = 0; i < res.length; i++) {
+    // Process each consultation
+    const startDate = res[i].StartDate
+    const actualDate = startDate.substr(0, startDate.indexOf('T'))
+
+    const consultationDate = new Date(actualDate) // Convert the actualDate to a Date object
+    consultationDate.setDate(consultationDate.getDate() + 1) // Set the consultationDate to be one day ahead as per booked event
+
+    let daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 60 * 60 * 24)) // Calculate the number of days until the consultation
+    if (daysUntilConsultation === 0) {
+      daysUntilConsultation = 'Your consultation is today. Please be on time.'
+    }
+    const truncatedDate = consultationDate.toString().slice(0, 15) // remove the time from the date
+    showConsultation(res[i].lecturerName, truncatedDate, res[i].StartTime, res[i].Duration, daysUntilConsultation, res[i].bookingId, res[i].Description)
+  }
+}
+
+getAllConsults() // call the function to get all the consultations
+
+function showConsultation(name, date, time, daysUntil, bookingId) {
   // Create a new list item for the consultation
   const consultationItem = document.createElement('li')
   consultationItem.classList.add('list-group-item')
@@ -393,7 +416,7 @@ function showConsultation (name, date, time, daysUntil, bookingId) {
   consultationList.appendChild(consultationItem)
 }
 
-function deleteConsult (id) {
+function deleteConsult(id) {
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
@@ -407,7 +430,7 @@ function deleteConsult (id) {
   })
 }
 
-function deleteAllConsultations () {
+function deleteAllConsultations() {
   const consultationList = document.getElementById('upcomingConsultations')
   while (consultationList.firstChild) {
     consultationList.firstChild.remove()

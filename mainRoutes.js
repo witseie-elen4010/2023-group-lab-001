@@ -44,6 +44,7 @@ mainRouter.post('/signup', async function (req, res) {
 
     // Set the JWT in an HttpOnly cookie
     res.cookie('token', token, { httpOnly: true })
+    res.cookie('userID', result.userID)
   }
 
   res.send(result)
@@ -104,7 +105,7 @@ mainRouter.get('/events', authMiddleware('student'), async function (req, res) {
 })
 
 mainRouter.post('/event_booking', authMiddleware('student'), async function (req, res) {
-  personId = req.cookies.userID
+  const personId = req.cookies.userID
   try {
     const { eventId, Date } = req.body
     await events.addEventBooking(eventId, personId, Date)
@@ -137,7 +138,7 @@ mainRouter.post('/studentDeleteBooking', authMiddleware('student'), async functi
 
 // Route to handle dashboard POST
 mainRouter.post('/dashboard', authMiddleware('teacher'), async function (req, res) {
-  userID = req.cookies.userID
+  const userID = req.cookies.userID
   res.type('application/json')
   const { dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description } = req.body
   const result = await dashboard.createConsultation(userID, dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description)
@@ -146,7 +147,7 @@ mainRouter.post('/dashboard', authMiddleware('teacher'), async function (req, re
 })
 
 mainRouter.get('/lecturerUpcomingConsultations', authMiddleware('teacher'), async function (req, res) {
-  userID = req.cookies.userID
+  const userID = req.cookies.userID
   res.type('application/json')
 
   const results = await lecUpcomingConsults.findLecturerUpcomingConsultations(userID)
@@ -162,12 +163,12 @@ mainRouter.post('/lecDeleteBooking', authMiddleware('teacher'), async function (
   res.send(result)
 })
 
-mainRouter.get('/logout', function(req, res) {
+mainRouter.get('/logout', function (req, res) {
   // Clear the token cookie
-  res.clearCookie('token');
-  res.clearCookie('userID');
+  res.clearCookie('token')
+  res.clearCookie('userID')
   // Redirect to the signup_login page
-  return res.redirect('/');
-});
+  return res.redirect('/')
+})
 
 module.exports = mainRouter
