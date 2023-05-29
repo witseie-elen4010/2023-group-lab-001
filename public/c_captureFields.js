@@ -22,14 +22,12 @@ function populateUpcoming(consultations) {
 
 function createUpcomingEntry(consultation) {
   const content = []
-  const consultationDate = new Date(consultation.Date) // Convert the consultation date to a Date object
-  consultationDate.setDate(consultationDate.getDate() + 1) // Set the consultation date to match with student dashboard
 
   content.push('<li class="list-group-item">')
   content.push('<div class="row">')
   content.push(`<div class="col-md-2 font-weight-bold">${consultation.studentName}</div>`)
   content.push(`<div class="col-md-3">${consultation.Description}</div>`)
-  content.push(`<div class="col-md-3">${consultationDate.toISOString().split('T')[0]} @ ${consultation.StartTime}</div>`)
+  content.push(`<div class="col-md-3">${new Date(consultation.Date).toISOString().split('T')[0]} @ ${consultation.StartTime}</div>`)
   content.push(`<div class="col-md-2">${consultation.Duration} mins</div>`)
   content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteConsultation(${consultation.Id})">Delete</button></div>`)
   content.push('</div></li>')
