@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             data.forEach(logEntry => {
                 const div = document.createElement('div');
                 div.className = 'log-entry';
-                
+
                 const nameElement = document.createElement('span');
                 nameElement.innerHTML = `<span class="name">Name:</span> <span class="value">${logEntry.Name}</span>`;
                 div.appendChild(nameElement);
@@ -27,7 +27,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 const dateObj = new Date(dateTime);
                 //dateObj.setHours(dateObj.getHours() + 2); // Convert to South African time (GMT+2)
                 //const formattedDateTime = dateObj.toLocaleString('en-ZA'); // Format date and time to South African locale
-                timestampElement.innerHTML = `<span class="timestamp">Date and Time (UTC):</span> <span class="value">${logEntry.TimeStamp}</span>`;
+                timestampElement.innerHTML = `<span class="timestamp">Date and Time (SAST):</span> <span class="value">${logEntry.TimeStamp}</span>`;
                 div.appendChild(timestampElement);
 
                 logDataDiv.appendChild(div);
