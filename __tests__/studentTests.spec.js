@@ -24,7 +24,7 @@ describe('getAllEvents', () => {
     // Assertions
     expect(require('../db_connection').promise).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(1)
-    expect(mockQuery).toHaveBeenCalledWith(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
+    expect(mockQuery).toHaveBeenCalledWith(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime,  DATE_FORMAT(e.StartDate,'%Y-%m-%d') AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
                                               FROM event e
                                               JOIN person p ON e.PersonId = p.Id
                                               LEFT JOIN(
@@ -47,7 +47,7 @@ describe('getAllEvents', () => {
     // Assertions
     expect(require('../db_connection').promise).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(1)
-    expect(mockQuery).toHaveBeenCalledWith(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
+    expect(mockQuery).toHaveBeenCalledWith(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime,  DATE_FORMAT(e.StartDate,'%Y-%m-%d') AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
                                               FROM event e
                                               JOIN person p ON e.PersonId = p.Id
                                               LEFT JOIN(
@@ -129,7 +129,7 @@ describe('getAllConsults', () => {
     expect(require('../db_connection').promise).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledWith(
-      'SELECT e.StartTime, e.Duration, e.StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
+      "SELECT e.StartTime, e.Duration, DATE_FORMAT(eb.Date,'%Y-%m-%d') StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?",
       [personId]
     )
     expect(consults).toEqual(mockConsults[0])
@@ -148,7 +148,7 @@ describe('getAllConsults', () => {
     // Assertions
     expect(mockQuery).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledWith(
-      'SELECT e.StartTime, e.Duration, e.StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?',
+      "SELECT e.StartTime, e.Duration, DATE_FORMAT(eb.Date,'%Y-%m-%d') StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?",
       [personId]
     )
   })
