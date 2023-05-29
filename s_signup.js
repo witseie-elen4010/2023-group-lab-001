@@ -30,20 +30,26 @@ async function addUser(name, email, password, role) {
     try {
         //Use prepared statements to sanitize inputs to protect from SQL injection attacks
         const [results] = await conn.promise().query("INSERT INTO person (Name, Email, Password, Role) VALUES (?, ?, ?, ?)", params);
-        console.log(results);
+        // Retrieve the ID of the last inserted record
+        const [[lastId]] = await conn.promise().query("SELECT LAST_INSERT_ID() AS id");
+        const userID = lastId.id;
+
         let redirectUrl;
         if (role === 'student') {
             redirectUrl = './student_portal_page';
         } else if (role === 'teacher') {
             redirectUrl = './lecturer_dashboard';
         }
-        return { href: redirectUrl, status: 'Valid' };
+        return { href: redirectUrl, status: 'Valid', userID: userID };
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
             return { status: 'Invalid', message: 'Email already taken' };
         }
         // handle other errors as needed
+        console.error(error);
+        return { status: 'Invalid', message: 'Invalid Signup' };
     }
+    
 }
 
 

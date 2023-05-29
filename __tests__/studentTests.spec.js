@@ -24,7 +24,15 @@ describe('getAllEvents', () => {
     // Assertions
     expect(require('../db_connection').promise).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(1)
-    expect(mockQuery).toHaveBeenCalledWith('SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.Id AS EventId FROM event e JOIN person p ON e.PersonId = p.Id;')
+    expect(mockQuery).toHaveBeenCalledWith(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
+                                              FROM event e
+                                              JOIN person p ON e.PersonId = p.Id
+                                              LEFT JOIN(
+                                                    SELECT eventId, COUNT(*) AS EventBookingCount
+                                                  FROM event_booking
+                                                  GROUP BY eventId
+                                                  ) AS eb ON e.Id = eb.eventId
+                                              WHERE COALESCE(eb.EventBookingCount, 0) < e.SlotsPerDay;`)
     expect(events).toEqual(mockEvents)
   })
 
@@ -39,9 +47,15 @@ describe('getAllEvents', () => {
     // Assertions
     expect(require('../db_connection').promise).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(1)
-    expect(mockQuery).toHaveBeenCalledWith(
-      'SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.Id AS EventId FROM event e JOIN person p ON e.PersonId = p.Id;'
-    )
+    expect(mockQuery).toHaveBeenCalledWith(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
+                                              FROM event e
+                                              JOIN person p ON e.PersonId = p.Id
+                                              LEFT JOIN(
+                                                    SELECT eventId, COUNT(*) AS EventBookingCount
+                                                  FROM event_booking
+                                                  GROUP BY eventId
+                                                  ) AS eb ON e.Id = eb.eventId
+                                              WHERE COALESCE(eb.EventBookingCount, 0) < e.SlotsPerDay;`)
   })
 })
 
