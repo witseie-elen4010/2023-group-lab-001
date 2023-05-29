@@ -62,7 +62,7 @@ mainRouter.post('/login', async function (req, res) {
     // Set the JWT in an HttpOnly cookie
     res.cookie('token', token, { httpOnly: true })
 
-    res.cookie('userID', result.userID)
+    //res.cookie('userID', result.userID)
   }
 
   res.send(result)
