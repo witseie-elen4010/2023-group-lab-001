@@ -1,8 +1,6 @@
 const conn = require('./db_connection')
 
-
 async function createConsultation(personId, dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description) {
-    
     const params = [personId, dow, startDate, endDate, startTime, endTime, duration, recurringWeeks, maxConsultStudents, description]
 
     try {
@@ -15,4 +13,4 @@ async function createConsultation(personId, dow, startDate, endDate, startTime, 
     }
 }
 
-module.exports = {createConsultation}
+module.exports = { createConsultation }
