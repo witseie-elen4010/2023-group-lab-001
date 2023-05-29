@@ -280,7 +280,7 @@ mainRouter.get('/logout', async function (req, res) {
 mainRouter.get('/logData', async function (req, res) {
   try {
     const [rows, fields] = await conn.promise().query(
-      `SELECT p.Name, p.Role, l.Action, l.TimeStamp 
+      `SELECT p.Name, p.Role, l.Action, DATE_FORMAT(l.TimeStamp,'%Y-%m-%d %T') TimeStamp 
        FROM log l
        INNER JOIN person p ON l.PersonId = p.Id
        ORDER BY l.TimeStamp DESC`
