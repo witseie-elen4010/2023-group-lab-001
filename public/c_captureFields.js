@@ -1,5 +1,5 @@
 
-function loadConsultations() {
+function loadBookings() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
@@ -9,7 +9,7 @@ function loadConsultations() {
   })
 }
 
-loadConsultations()
+loadBookings()
 
 // populate upcoming consultations section
 function populateUpcoming(consultations) {
@@ -17,13 +17,13 @@ function populateUpcoming(consultations) {
   for (let i = 0; i < consultations.length; i++) {
     content.push(createUpcomingEntry(consultations[i]))
   }
-  $('#upcomingConsultationsList').html(content.join(''))
+  $('#upcomingBookingsList').html(content.join(''))
 }
 
 function createUpcomingEntry(consultation) {
   const content = []
   const consultationDate = new Date(consultation.Date) // Convert the consultation date to a Date object
-  consultationDate.setDate(consultationDate.getDate() + 1) // Set the consultation date to match with student dashboard
+  //consultationDate.setDate(consultationDate.getDate() + 1) // Set the consultation date to match with student dashboard
 
   content.push('<li class="list-group-item">')
   content.push('<div class="row">')
@@ -31,12 +31,12 @@ function createUpcomingEntry(consultation) {
   content.push(`<div class="col-md-3">${consultation.Description}</div>`)
   content.push(`<div class="col-md-3">${consultationDate.toISOString().split('T')[0]} @ ${consultation.StartTime}</div>`)
   content.push(`<div class="col-md-2">${consultation.Duration} mins</div>`)
-  content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteConsultation(${consultation.Id})">Delete</button></div>`)
+  content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteBooking(${consultation.Id})">Delete</button></div>`)
   content.push('</div></li>')
   return content.join('')
 }
 
-function deleteConsultation(id) {
+function deleteBooking(id) {
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
@@ -45,10 +45,64 @@ function deleteConsultation(id) {
   }).done(function (res) {
     if (res.status === 'Completed') {
       alert(`Booking: "${id}" has been deleted`)
-      loadConsultations()
+      loadBookings()
     }
   })
 }
+
+//Code to fetch and show all of the consultations the lecturer has created:
+
+function loadConsultations() {
+  $.ajax({
+    type: 'GET',
+    contentType: 'application/json',
+    url: './lecturerAllConsultations' // URL that the POST is sent to
+  }).done(function (res) {
+    console.log(res)
+    populateUpcomingConsultations(res)
+  })
+}
+
+loadConsultations()
+
+function populateUpcomingConsultations(consultations) {
+  const content = []
+  for (let i = 0; i < consultations.length; i++) {
+    content.push(createConsulationEntry(consultations[i]))
+  }
+  $('#allConsultationsList').html(content.join(''))
+}
+
+function createConsulationEntry(event) {
+  const content = []
+  
+  const eventDate = new Date(event.StartDate)
+  
+  content.push('<li class="list-group-item">')
+  content.push('<div class="row">')
+  content.push(`<div class="col-md-3 font-weight-bold">${event.Description}</div>`)
+  content.push(`<div class="col-md-2 font-weight-bold">${event.SlotsPerDay}</div>`)
+  content.push(`<div class="col-md-3">${eventDate.toISOString().split('T')[0]} @ ${event.StartTime}</div>`)
+  content.push(`<div class="col-md-2">${event.Duration} mins</div>`)
+  content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteEvent(${event.Id})">Delete</button></div>`)
+  content.push('</div></li>')
+  return content.join('')
+}
+
+function deleteEvent(id) {
+  $.ajax({
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({ bookingID: id }),
+    url: './lecDeleteEvent' // URL that the POST is sent to
+  }).done(function (res) {
+    if (res.status === 'Completed') {
+      alert(`Consultation: "${id}" has been deleted`)
+      loadBookings()
+    }
+  })
+}
+
 
 document.getElementById('save-chages').addEventListener('click', previewConsultation)
 let createConsultation = null
@@ -155,6 +209,7 @@ function previewConsultation() {
       })
     }
 
+    loadConsultations()
     alert(`Consultation: ${description} created!`)
   }
 

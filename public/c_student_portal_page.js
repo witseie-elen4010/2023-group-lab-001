@@ -29,7 +29,7 @@ for (let day = 1; day <= 31; day++) {
 // Function to handle event booking
 async function bookEvent(EventId, EventDate) {
   const date = new Date(EventDate)
-  date.setDate(date.getDate() + 1)
+  //date.setDate(date.getDate() + 1)
   const formattedDate = date.toISOString().split('T')[0]
   // console.log(formattedDate)
 
@@ -311,11 +311,10 @@ function processConsults(res) {
   for (let i = 0; i < res.length; i++) {
     // Process each consultation
     const startDate = res[i].StartDate
-    const actualDate = startDate.substr(0, startDate.indexOf('T'))
+    const actualDate = startDate
 
     const consultationDate = new Date(actualDate) // Convert the actualDate to a Date object
-    consultationDate.setDate(consultationDate.getDate() + 1) // Set the consultationDate to be one day ahead as per booked event
-
+    
     let daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 60 * 60 * 24)) // Calculate the number of days until the consultation
     if (daysUntilConsultation === 0) {
       daysUntilConsultation = 'Your consultation is today. Please be on time.'
