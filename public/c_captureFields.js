@@ -130,8 +130,11 @@ function previewConsultation() {
 
   const startTime = document.getElementById('start-time').value
   const endTime = document.getElementById('end-time').value
+  
+  const startTicks = new Date(startDate.toISOString().substring(0, 10) + ' ' + startTime).getTime()
+  const endTicks = new Date(startDate.toISOString().substring(0, 10) + ' ' + endTime).getTime()
 
-  // Check end time is valid:
+    // Check end time is valid:
   if (new Date('1970/01/01 ' + endTime) < new Date('1970/01/01 ' + startTime)) {
     alert('Cannot end a consultation before it starts. \nPlease reselect end time')
     return
@@ -140,6 +143,9 @@ function previewConsultation() {
 
     return
   }
+
+ 
+  
 
   const maxConsultStudents = document.getElementById('max-consults-students').value
   let recurringWeeks = document.getElementById('num-weeks-recurring').value
@@ -173,9 +179,37 @@ function previewConsultation() {
   if (description != '') {
     consultationSummaryString += '<br />' + 'Description: ' + description
   }
-
-  $('#consultationSummary').modal('show')
+  
   document.getElementById('consultationSummaryModalBody').innerHTML = (consultationSummaryString)
+
+   //Check consultation doesn't overlap with existing consultations
+   $.ajax({
+    type: 'GET',
+    contentType: 'application/json',
+    url: './lecturerAllConsultations' // URL that the POST is sent to
+  }).done(function (res) {
+    let conflict = false;
+    for (let i = 0; i < res.length; i++)
+    {
+      const eStartTicks = new Date (res[i].StartDate + ' ' + res[i].StartTime).getTime()
+      const eEndTicks = new Date (res[i].EndDate + ' ' + res[i].EndTime).getTime()
+      if((eStartTicks <= endTicks) && (eEndTicks >= startTicks))
+      {
+        
+        alert(`Cannot create consultation - consultation: ${res[i].Description} has a conflicting time`)
+        conflict = true
+        return
+      }
+    }
+    if(!conflict)
+    {
+      $('#consultationSummary').modal('show')
+      return
+    }
+  })
+
+  
+  
 
   // get day of week to store in database
   const dow = startDate.toString().substring(0, 3)
