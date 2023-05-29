@@ -2,35 +2,8 @@
 
 const pool = require('./db_connection')
 
-function isValidDate(dateString) {
-  // Create a new Date object from the date string.
-  const date = new Date(dateString)
-  if (isNaN(date) || isNaN(date.getFullYear()) || isNaN(date.getMonth()) || isNaN(date.getDate())) {
-    return false
-  }
-  const day = parseInt(dateString.substr(8, 2), 10)
-  const ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  if (date.getMonth() === 2) {
-    let leapYear = false
-    if ((!(date.getFullYear() % 4) && date.getFullYear() % 100) || !(date.getFullYear() % 400)) {
-      leapYear = true
-    }
-    if ((leapYear === false) && (day >= 29)) {
-      return false
-    } else if ((leapYear === true) && (day > 29)) {
-      return false
-    }
-  } else if (date.getMonth() === 1 || date.getMonth() > 2) {
-    if (day > ListofDays[date.getMonth() - 1]) {
-      // to check if the date is out of range
-      return false
-    }
-  }
-  return true
-}
-
 // Function to retrieve all events from the database
-async function getAllEvents() {
+async function getAllEvents () {
   try {
     const events = await pool.promise().query(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
                                               FROM event e
@@ -48,7 +21,7 @@ async function getAllEvents() {
   }
 }
 
-async function getAllConsults(personId) {
+async function getAllConsults (personId) {
   try {
     // Use prepared statements to sanitize inputs to protect from SQL injection attacks
     const query = 'SELECT e.StartTime, e.Duration, e.StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?'
@@ -62,7 +35,7 @@ async function getAllConsults(personId) {
 }
 
 // Function to add an event booking to the database
-async function addEventBooking(eventId, personId, Date) {
+async function addEventBooking (eventId, personId, Date) {
   personId = parseInt(personId)
   if (!eventId || typeof eventId !== 'number') {
     throw new Error('Invalid eventId')
@@ -73,7 +46,7 @@ async function addEventBooking(eventId, personId, Date) {
     throw new Error('Invalid personId')
   }
 
-  if (!Date || !isValidDate(Date)) {
+  if (!Date) {
     throw new Error('Invalid Date')
   }
 

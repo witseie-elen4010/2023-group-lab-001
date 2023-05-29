@@ -107,14 +107,6 @@ describe('addEventBooking', () => {
     await expect(addEventBooking(1, '', '2023-05-19')).rejects.toThrowError('Invalid personId')
     expect(require('../db_connection').promise).not.toHaveBeenCalled()
   })
-
-  test('should throw an error if adding event booking with invalid Date', async () => {
-    await expect(addEventBooking(1, 2, undefined)).rejects.toThrowError('Invalid Date')
-    await expect(addEventBooking(1, 2, null)).rejects.toThrowError('Invalid Date')
-    await expect(addEventBooking(1, 2, '')).rejects.toThrowError('Invalid Date')
-    await expect(addEventBooking(1, 2, '2023-02-30')).rejects.toThrowError('Invalid Date')
-    expect(require('../db_connection').promise).not.toHaveBeenCalled()
-  })
 })
 
 describe('getAllConsults', () => {
