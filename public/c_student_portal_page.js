@@ -27,7 +27,7 @@ for (let day = 1; day <= 31; day++) {
 }
 
 // Function to handle event booking
-async function bookEvent (EventId, EventDate) {
+async function bookEvent(EventId, EventDate) {
   const date = new Date(EventDate)
   const formattedDate = date.toISOString().split('T')[0]
   // console.log(formattedDate)
@@ -62,7 +62,7 @@ async function bookEvent (EventId, EventDate) {
   }
 }
 
-function sortEvents (events) {
+function sortEvents(events) {
   events[0].sort((a, b) => {
     const dateA = new Date(a.EventDate)
     const dateB = new Date(b.EventDate)
@@ -79,7 +79,7 @@ function sortEvents (events) {
   })
 }
 
-function addMultipleWeekEvents (events) {
+function addMultipleWeekEvents(events) {
   const newEvents = [] // Separate array to hold newly generated events
 
   for (let i = 0; i < events[0].length; i++) {
@@ -99,7 +99,7 @@ function addMultipleWeekEvents (events) {
   return events
 }
 
-function generateLecturerOptions (events) {
+function generateLecturerOptions(events) {
   const listOfLecturers = []
   events[0].forEach(event => {
     Object.entries(event).forEach(([key, value]) => {
@@ -111,7 +111,7 @@ function generateLecturerOptions (events) {
   return new Set(listOfLecturers)
 }
 
-function generateHTMLLectuerOptions (listOfLecturers) {
+function generateHTMLLectuerOptions(listOfLecturers) {
   const dropdown = document.getElementById('lecturerDropDown')
   listOfLecturers.forEach(lecturer => {
     const lecturerOption = document.createElement('option')
@@ -120,7 +120,7 @@ function generateHTMLLectuerOptions (listOfLecturers) {
   })
 }
 
-function getFilterEvents (allEvents) {
+function getFilterEvents(allEvents) {
   if (allEvents) {
     const lecturerDropDown = document.getElementById('lecturerDropDown')
     const selectedLecturerOption = lecturerDropDown.options[lecturerDropDown.selectedIndex].text
@@ -143,7 +143,7 @@ function getFilterEvents (allEvents) {
 }
 
 // Generate HTML table dynamically
-function generateTable (events) {
+function generateTable(events) {
   const table = document.createElement('table')
   table.id = 'openConsultationTable'
   table.classList.add('table', 'table-striped')
@@ -218,7 +218,7 @@ function generateTable (events) {
   return table
 }
 
-async function getAllEvents () {
+async function getAllEvents() {
   return new Promise(function (resolve, reject) {
     $.ajax({
       type: 'GET',
@@ -237,6 +237,7 @@ async function getAllEvents () {
           generateHTMLLectuerOptions(lecturersUnique)
 
           events = addMultipleWeekEvents(events)
+          events[0] = removePastEvents(events[0])
 
           // Sort events by which ones are closer
           sortEvents(events)
@@ -257,7 +258,35 @@ async function getAllEvents () {
 
 let allEvents
 
-function removeTable () {
+function removePastEvents(res) {
+  const filteredEvents = []
+
+  const currentDate = new Date() // Get the current date
+  const currentTimeHour = parseInt(currentDate.toString().slice(15, 25)) // extract the time from the date
+  const currentTimeMinute = parseInt(currentDate.toString().slice(19, 21))
+  currentDate.setHours(2, 0, 0, 0) // set time to 02:00:00 so can compare with retrieved date
+
+  for (let i = 0; i < res.length; i++) {
+    const startDate = res[i].EventDate
+    const actualDate = startDate
+    const consultationDate = new Date(actualDate) // Convert the actualDate to a Date object
+
+    const consultTimeHour = parseInt(res[i].EventStartTime)
+    const consultTimeMinute = parseInt(res[i].EventStartTime.slice(3, 5))
+
+    // Compare consultationDate and time with currentDate and time
+    if (consultationDate > currentDate) {
+      filteredEvents.push(res[i])
+    } else if (currentDate.toString() === consultationDate.toString() && currentTimeHour < consultTimeHour) {
+      filteredEvents.push(res[i])
+    } else if (currentDate.toString() === consultationDate.toString() && currentTimeHour === consultTimeHour && currentTimeMinute < consultTimeMinute) {
+      filteredEvents.push(res[i])
+    }
+  }
+  return filteredEvents
+}
+
+function removeTable() {
   // Step 1: Get a reference to the table element
   const table = document.getElementById('openConsultationTable')
 
@@ -265,13 +294,13 @@ function removeTable () {
   table.remove()
 }
 
-function filterAlreadyBookedConsultations (events, bookedConsulations) {
-  function extractAttribute (arr, attributeName) {
+function filterAlreadyBookedConsultations(events, bookedConsulations) {
+  function extractAttribute(arr, attributeName) {
     return arr.map(obj => obj[attributeName])
   }
   const bookedBookingIds = extractAttribute(bookedConsulations, 'eventId')
 
-  function deleteAlreadyBookedEvents (events, bookedConsulationIds) {
+  function deleteAlreadyBookedEvents(events, bookedConsulationIds) {
     const filteredEvents = []
     for (let i = 0; i < events.length; i++) {
       if (!(bookedConsulationIds.includes(events[i].EventId))) {
@@ -284,7 +313,7 @@ function filterAlreadyBookedConsultations (events, bookedConsulations) {
 }
 
 let allConsultations
-function getAllConsults () {
+function getAllConsults() {
   return new Promise((resolve, reject) => {
     $.ajax({
       type: 'GET',
@@ -294,6 +323,7 @@ function getAllConsults () {
         allConsultations = res
         if (res.length > 0) {
           processConsults(res)
+          separatePastConsults(res)
         } else {
           const consultationList = document.getElementById('upcomingConsultations')
           consultationList.innerHTML = '<div class="no-consultations">No upcoming consultations</div>'
@@ -307,35 +337,107 @@ function getAllConsults () {
   })
 }
 
-// function to sort consultations and retrieve correct information
-function processConsults (res) {
-  // Sort the events by date
+getAllConsults()
+
+// sort consults to display in order of time
+function processConsults(res) {
+  // Sort the events by date and time
   res.sort(function (a, b) {
     const dateA = new Date(a.StartDate)
     const dateB = new Date(b.StartDate)
+
+    // If the dates are equal, compare the start times
+    if (dateA.getTime() === dateB.getTime()) {
+      const timeA = new Date(`1970-01-01T${a.StartTime}`)
+      const timeB = new Date(`1970-01-01T${b.StartTime}`)
+      return timeA - timeB
+    }
     return dateA - dateB
   })
+}
 
+function separatePastConsults(res) {
   const currentDate = new Date() // Get the current date
+  const currentTimeHour = parseInt(currentDate.toString().slice(15, 25)) // extract the time from the date
+  const currentTimeMinute = parseInt(currentDate.toString().slice(19, 21))
+  currentDate.setHours(2, 0, 0, 0) // set time to 02:00:00 so can compare with retrieved date
+
   for (let i = 0; i < res.length; i++) {
-    // Process each consultation
     const startDate = res[i].StartDate
     const actualDate = startDate
-
     const consultationDate = new Date(actualDate) // Convert the actualDate to a Date object
-    
-    let daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 60 * 60 * 24)) // Calculate the number of days until the consultation
-    if (daysUntilConsultation === 0) {
+
+    const truncatedDateConsult = consultationDate.toString().slice(0, 15) // Remove the time from the date
+    const consultTimeHour = parseInt(res[i].StartTime)
+    const consultTimeMinute = parseInt(res[i].StartTime.slice(3, 5))
+
+    let daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 3600 * 24)) // Calculate the number of days until the consultation
+
+    let flag = false
+
+    // Compare consultationDate and time with currentDate and time
+    if (consultationDate > currentDate) {
+      flag = true
+    } else if (currentDate.toString() === consultationDate.toString() && currentTimeHour < consultTimeHour) {
       daysUntilConsultation = 'Your consultation is today. Please be on time.'
+      flag = true
+    } else if (currentDate.toString() === consultationDate.toString() && currentTimeHour === consultTimeHour && currentTimeMinute < consultTimeMinute) {
+      daysUntilConsultation = 'Your consultation is today. Please be on time.'
+      flag = true
     }
-    const truncatedDate = consultationDate.toString().slice(0, 15) // remove the time from the date
-    showConsultation(res[i].lecturerName, truncatedDate, res[i].StartTime, res[i].Duration, daysUntilConsultation, res[i].bookingId, res[i].Description)
+    if (flag === true) { // If the consultationDate is after the currentDate, display the consultation
+      showConsultation(false,
+        res[i].lecturerName,
+        truncatedDateConsult,
+        res[i].StartTime,
+        res[i].Duration,
+        daysUntilConsultation,
+        res[i].bookingId,
+        res[i].Description
+      )
+    } else { // display consultation in past consultations tab
+      showConsultation(true,
+        res[i].lecturerName,
+        truncatedDateConsult,
+        res[i].StartTime,
+        res[i].Duration,
+        0,
+        0,
+        res[i].Description
+      )
+    }
   }
 }
 
-getAllConsults()
+document.addEventListener('DOMContentLoaded', function () {
+  const upcomingTab = document.getElementById('upcomingTab')
+  const pastTab = document.getElementById('pastTab')
+  const upcomingConsultations = document.getElementById('upcoming')
+  const pastConsultations = document.getElementById('past')
 
-function generateFilteredEventTable () {
+  // Add click event listeners to the tabs
+  upcomingTab.addEventListener('click', function () {
+    // Show the upcoming consultations tab and hide the past consultations tab
+    upcomingTab.classList.add('active')
+    pastTab.classList.remove('active')
+    upcomingConsultations.classList.add('show')
+    upcomingConsultations.classList.add('active')
+    pastConsultations.classList.remove('show')
+    pastConsultations.classList.remove('active')
+  })
+
+  pastTab.addEventListener('click', function () {
+    // Show the past consultations tab and hide the upcoming consultations tab
+    pastTab.classList.add('active')
+    upcomingTab.classList.remove('active')
+    pastConsultations.classList.add('show')
+    pastConsultations.classList.add('active')
+    upcomingConsultations.classList.remove('show')
+    upcomingConsultations.classList.remove('active')
+  })
+})
+
+function generateFilteredEventTable() {
   try {
     removeTable()
   } catch (error) {
@@ -368,7 +470,7 @@ getAllEvents()
     console.error('Error:', error) // Handle the rejected error here
   })
 
-function showConsultation (name, date, time, duration, daysUntil, bookingId, description) {
+function showConsultation(isPast, name, date, time, duration, daysUntil, bookingId, description) {
   // Create a new list item for the consultation
   const consultationItem = document.createElement('li')
   consultationItem.classList.add('list-group-item', 'mb-3')
@@ -389,10 +491,13 @@ function showConsultation (name, date, time, duration, daysUntil, bookingId, des
     { label: 'Date:', value: date },
     { label: 'Start Time:', value: time },
     { label: 'Duration (minutes):', value: duration },
-    { label: 'Description:', value: description },
-    { label: 'Days Until Consultation:', value: daysUntil }
+    { label: 'Description:', value: description }
   ]
 
+  // Add "Days Until Consultation" row for upcoming consultations
+  if (!isPast) {
+    rows.push({ label: 'Days Until Consultation:', value: daysUntil })
+  }
   rows.forEach((row) => {
     const tr = document.createElement('tr')
 
@@ -411,37 +516,39 @@ function showConsultation (name, date, time, duration, daysUntil, bookingId, des
     table.appendChild(tr)
   })
 
-  // Create a row for the cancel button
-  const cancelButtonRow = document.createElement('tr')
+  // Create a row for the cancel button (only for upcoming consultations)
+  if (!isPast) {
+    const cancelButtonRow = document.createElement('tr')
 
-  const cancelButtonCell = document.createElement('td')
-  cancelButtonCell.setAttribute('colspan', '2')
-  cancelButtonCell.classList.add('text-end') // Align button to the right
+    const cancelButtonCell = document.createElement('td')
+    cancelButtonCell.setAttribute('colspan', '2')
+    cancelButtonCell.classList.add('text-end') // Align button to the right
 
-  const cancelButton = document.createElement('button')
-  cancelButton.classList.add('btn', 'btn-danger')
-  cancelButton.textContent = 'Cancel'
+    const cancelButton = document.createElement('button')
+    cancelButton.classList.add('btn', 'btn-danger')
+    cancelButton.textContent = 'Cancel'
 
-  // Add cancel button click event handler
-  cancelButton.addEventListener('click', function () {
-    // This function will be called when the cancel button is clicked
-    deleteAllConsultations()
-    deleteConsult(bookingId)
-  })
+    // Add cancel button click event handler
+    cancelButton.addEventListener('click', function () {
+      // This function will be called when the cancel button is clicked
+      deleteAllConsultations()
+      deleteConsult(bookingId)
+    })
 
-  cancelButtonCell.appendChild(cancelButton)
-  cancelButtonRow.appendChild(cancelButtonCell)
-  table.appendChild(cancelButtonRow)
+    cancelButtonCell.appendChild(cancelButton)
+    cancelButtonRow.appendChild(cancelButtonCell)
+    table.appendChild(cancelButtonRow)
+  }
 
   // Append the table to the consultation item
   consultationItem.appendChild(table)
 
-  // Append the consultation item to the consultation list
-  const consultationList = document.getElementById('upcomingConsultations')
+  // Append the consultation item to the appropriate container
+  const consultationList = isPast ? document.getElementById('pastConsultations') : document.getElementById('upcomingConsultations')
   consultationList.appendChild(consultationItem)
 }
 
-function deleteConsult (id) {
+function deleteConsult(id) {
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
@@ -455,7 +562,7 @@ function deleteConsult (id) {
   })
 }
 
-function deleteAllConsultations () {
+function deleteAllConsultations() {
   const consultationList = document.getElementById('upcomingConsultations')
   while (consultationList.firstChild) {
     consultationList.firstChild.remove()
