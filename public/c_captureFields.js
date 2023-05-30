@@ -106,9 +106,10 @@ function deleteEvent(id) {
 }
 
 
-document.getElementById('save-chages').addEventListener('click', previewConsultation)
+document.getElementById('availability-form').addEventListener('submit', previewConsultation)
 let createConsultation = null
-function previewConsultation() {
+function previewConsultation(e) {
+  e.preventDefault()
   // Get form values
   const startDate = new Date(document.getElementById('day-of-month').value)
 
