@@ -3,7 +3,7 @@ function loadBookings() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerUpcomingConsultations' // URL that the POST is sent to
+    url: './lecturerUpcomingConsultations?filter=' + $('#bookingFilter').val(), // URL that the POST is sent to
   }).done(function (res) {
     populateUpcoming(res)
   })
