@@ -9,7 +9,8 @@ async function createConsultation(personId, dow, startDate, endDate, startTime, 
         console.log(results)
         return true
     } catch (error) {
-        console.log(error)
+        console.error('Error creating consultation:', error)
+        throw error
     }
 }
 
