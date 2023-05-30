@@ -3,7 +3,7 @@ function loadBookings() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerUpcomingConsultations' // URL that the POST is sent to
+    url: './lecturerUpcomingConsultations?filter=' + $('#bookingFilter').val(), // URL that the POST is sent to
   }).done(function (res) {
     populateUpcoming(res)
   })
@@ -57,7 +57,8 @@ function loadConsultations() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerAllConsultations' // URL that the POST is sent to
+    url: './lecturerAllConsultations?filter=' + $('#consultFilter').val(),// URL that the POST is sent to
+  
   }).done(function (res) {
     console.log(res)
     populateUpcomingConsultations(res)
@@ -99,7 +100,7 @@ function deleteEvent(id) {
   }).done(function (res) {
     if (res.status === 'Completed') {
       alert(`Consultation: "${id}" has been deleted`)
-      loadBookings()
+      loadConsultations()
     }
   })
 }
@@ -188,7 +189,8 @@ function previewConsultation() {
    $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerAllConsultations' // URL that the POST is sent to
+    url: './lecturerAllConsultations?filter=All' // URL that the POST is sent to
+    
   }).done(function (res) {
     let conflict = false;
     for (let i = 0; i < res.length; i++)
