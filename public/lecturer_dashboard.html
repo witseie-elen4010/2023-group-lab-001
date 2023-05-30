@@ -127,23 +127,23 @@
 
                 <div class="form-group" id="startDate">
                     <label for="day-of-month">Consultation date:</label>
-                    <input type="date" class="form-control" id="day-of-month" name="day-of-month">
+                    <input type="date" class="form-control" id="day-of-month" name="day-of-month" required>
                 </div>
                 <div class="form-group">
 
                     <div class="form-group">
                         <label for="start-time">Start time:</label>
-                        <input type="time" class="form-control" id="start-time" name="start-time">
+                        <input type="time" class="form-control" id="start-time" name="start-time" required>
                     </div>
                     <div class="form-group">
                         <label for="end-time">End time:</label>
-                        <input type="time" class="form-control" id="end-time" name="end-time">
+                        <input type="time" class="form-control" id="end-time" name="end-time" required>
                     </div>
 
                     <div class="form-group">
                         <label for="max-students">Maximum students for this consultation:</label>
                         <input type="number" placeholder="--" class="form-control" id="max-consults-students"
-                            name="max-consults-students" min="1">
+                            name="max-consults-students" min="1" required="true">
                     </div>
 
                     <!--Recurring radio btn-->
@@ -169,7 +169,7 @@
         <div class="form-check">
             <div class="form-group">
                 <label for="description">Please write any special info about this consultation:</label>
-                <input type="string" class="form-control" id="description" name="description">
+                <input type="string" class="form-control" id="description" name="description" required>
             </div>
             <button type="button" id="save-chages" class="btn btn-primary">Preview Consultation...</button>
             </form>
