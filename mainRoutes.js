@@ -223,7 +223,7 @@ mainRouter.get('/lecturerUpcomingConsultations', authMiddleware('teacher'), asyn
   res.type('application/json')
   filter = req.query.filter
   console.log(filter)
-  const results = await lecUpcomingConsults.findLecturerUpcomingConsultations(userID,filter)
+  const results = await lecUpcomingConsults.findLecturerUpcomingConsultations(userID, filter)
   res.send(results)
 })
 
@@ -231,10 +231,10 @@ mainRouter.get('/lecturerUpcomingConsultations', authMiddleware('teacher'), asyn
 mainRouter.get('/lecturerAllConsultations', authMiddleware('teacher'), async function (req, res) {
   userID = req.cookies.userID
   filter = req.query.filter
-  
+
   res.type('application/json')
 
-  const results = await lecUpcomingConsults.allConsultations(userID,filter)
+  const results = await lecUpcomingConsults.allConsultations(userID, filter)
   res.send(results)
 })
 

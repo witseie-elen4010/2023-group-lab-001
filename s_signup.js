@@ -49,7 +49,7 @@ async function addUser(name, email, password, role) {
         console.error(error);
         return { status: 'Invalid', message: 'Invalid Signup' };
     }
-    
+
 }
 
 
