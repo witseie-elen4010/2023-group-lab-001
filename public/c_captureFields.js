@@ -64,6 +64,7 @@ function loadConsultations() {
   })
 }
 
+console.log('LOAD CONSULTS')
 loadConsultations()
 
 function populateUpcomingConsultations(consultations) {
@@ -99,7 +100,7 @@ function deleteEvent(id) {
   }).done(function (res) {
     if (res.status === 'Completed') {
       alert(`Consultation: "${id}" has been deleted`)
-      loadBookings()
+      loadConsultations()
     }
   })
 }
