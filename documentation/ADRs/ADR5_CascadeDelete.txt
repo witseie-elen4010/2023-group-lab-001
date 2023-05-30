@@ -1,0 +1,16 @@
+CONTEXT:
+	A lecturer needs to be able to delete an event they have created and make is unavailable to student to book, but
+	if a student has already booked a slot with an existing consultation, the database will stop the lecturer from 
+	deleting the consultation due to the initial foreign key restriction imposed.
+
+DESCISION:
+	It is decided to change the foreign key restriction from 'restricted' to 'cascade' on the eventId foreign key 
+	in the bookings table. This allows the lecturer to cascade delete consulations, enabling them to delete a consultation
+	which has a slot booked with it.
+
+STATUS:
+	Accepted.
+
+CONSEQUENCES:
+	A lecturer can now delete a consultation even if a student has booked with it, and the student has no control over it.
+	The lecturer is now able to delete consultations they are no longer able to attend.

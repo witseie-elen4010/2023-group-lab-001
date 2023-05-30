@@ -1,0 +1,22 @@
+A meeting of Consulta was held on Microsoft Teams on 2023/05/30
+
+Attendees:
+	- Asher Radowsky
+	- Liad Peretz
+	- Josh Shapiro
+	- Elli Joffe
+
+Sprint42 velocity: 26 points across 7 stories (14 dev sized stories delivered)
+
+Activities performed well:
+
+- Splitting up of coding tasks amongst devs
+- Timeous completion of coding activities
+- Trunk integrity maintained well
+- Code review process well organized and completed
+- All user stories delivered
+
+Activities performed suboptimally:
+
+- Some merge conflicts
+- Documentation could have been prepared earlier

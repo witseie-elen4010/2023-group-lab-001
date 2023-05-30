@@ -1,0 +1,17 @@
+CONTEXT:
+	It has been noted over the initial development of the lecturer functionality, specifically with the creation
+	of new consultation events that the current structure of having one event decribe a consultation completely 
+	including all the possible days it may exist for, as well as the entire date range is needlessly complicated and
+	can be simplified.
+
+DECISION:
+	It has been decided to simplify the event objects in the database such that each event object can only describe
+	an event on ONE particular day (ie: Mondays or Tuesdays, but not both). Subsequent removal of the day binary option in the 
+	database and replacement with a single DOW (day of week), and the first and last occurrences are not renamed to the StartDate and EndDate.
+
+STATUS:
+	Accepted.
+
+CONSEQUENCES:
+	Code which creates and inserts events is rewritten. Code which reads events and displays and filters them is simplified.
+	Lecturer event creation process is more straightforward.

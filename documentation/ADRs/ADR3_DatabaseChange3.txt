@@ -1,0 +1,14 @@
+CONTEXT:
+	An admin needs to be able to view a log of all actions taken on the system, and there is currently no table set up in the 
+	database which allows the logs to be stored/searched.
+
+DECISION:
+	A new table called 'log' is added to the database, as well as a new user role of 'admin'. A new page is added to the website
+	which allows the admin to log in and view all system logs.
+
+STATUS:
+	Accepted.
+
+CONSEQUENCES:
+	All routes needed to be updated to add logging code to them. A new page needed to be added for the admin to see. 
+	Login authentication had to be updated. The system now accurately logs all user events and the admin can view them.

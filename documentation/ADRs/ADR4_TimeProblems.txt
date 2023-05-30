@@ -1,0 +1,21 @@
+CONTEXT:
+	The database is stored on a South African server due to Azure restrictions. The local servers used to test the system
+	think they are operating in a UTC timezone. The Azure live deployment is hosted on an American server, due to Azure student 
+	account restrictions. This creates an issue as the respective servers try to modify the dates and times stored in the database
+	to display correctly in their timezones. This is causing date issues as dates on the local servers are showing a day early, and
+	on the Azure deployment are showing a day late. This makes it impossible to practically test the system, as well as making the dates on
+	the live deployments all be a day late, which is obviously incorrect.
+
+DECISION:
+	It is decided to modify all SELECTs in all SQL queries to strip out the time stored (automatically) with the dates in the database. This forces
+	the servers hosting the deployments to take the date values as timeless, and as such they cannot try to modify the times to their
+	respective timezones and break the true dates.
+
+STATUS:
+	Accepted.
+
+CONSEQUENCES:
+	All SQL statements reading from the database needed to be modified. All code previously written to address the date
+	errors is removed.
+	The system now accurately shows the correct dates and times, regardless of what server is hosting the deployment.
+	Database is unchanged as date storage is accurate.

@@ -1,0 +1,15 @@
+CONTEXT:
+	The current event object structure where each singular record describes all the possible repeats of an event is 
+	causing issues when deleting events - especially if a lecturer wants to delete a single instance of a repeating event.
+	
+DECISION:
+	It is decided to restructure the code which creates events and inserts them into the database to now create an individual 
+	record for every possible event, and each event record cannot repeat.
+
+STATUS:
+	Accepted.
+
+CONSEQUENCES:
+	Code which creates and inserts event records is completely rewritten. Database now stores more records, potentially slowing its
+	search times. Events can now accurately be deleted by a lecturer, even if it is a middle instance of a repeat.
+	
