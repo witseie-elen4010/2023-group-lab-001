@@ -57,14 +57,14 @@ function loadConsultations() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerAllConsultations' // URL that the POST is sent to
+    url: './lecturerAllConsultations?filter=' + $('#consultFilter').val(),// URL that the POST is sent to
+  
   }).done(function (res) {
     console.log(res)
     populateUpcomingConsultations(res)
   })
 }
 
-console.log('LOAD CONSULTS')
 loadConsultations()
 
 function populateUpcomingConsultations(consultations) {
@@ -189,7 +189,8 @@ function previewConsultation() {
    $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerAllConsultations' // URL that the POST is sent to
+    url: './lecturerAllConsultations?filter=All' // URL that the POST is sent to
+    
   }).done(function (res) {
     let conflict = false;
     for (let i = 0; i < res.length; i++)

@@ -229,9 +229,11 @@ mainRouter.get('/lecturerUpcomingConsultations', authMiddleware('teacher'), asyn
 //Route to get all lecturer consultations
 mainRouter.get('/lecturerAllConsultations', authMiddleware('teacher'), async function (req, res) {
   userID = req.cookies.userID
+  filter = req.query.filter
+  console.log(filter)
   res.type('application/json')
 
-  const results = await lecUpcomingConsults.allConsultations(userID)
+  const results = await lecUpcomingConsults.allConsultations(userID,filter)
   res.send(results)
 })
 

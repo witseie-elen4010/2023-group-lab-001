@@ -41,21 +41,21 @@
             <li class="nav-item">
                 <a class="nav-link active" id="tab-upcoming-bookings" data-toggle="tab" href="#upcoming-bookings"
                     role="tab" aria-controls="upcoming-bookings" aria-selected="true">
-                    Upcoming Bookings
+                    Bookings
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" id="tab-consultations" data-toggle="tab" href="#consultations" role="tab"
                     aria-controls="consultations" aria-selected="false">
-                    All Consultations
+                    Consultations
                 </a>
             </li>
 
         </ul>
         <div class="tab-content card mb-3" id="tab-content">
             <div class="tab-pane fade show active" id="upcoming-bookings" role="tabpanel"
-                aria-labelledby="tab-upcoming-bookings">
+                aria-labelledby="tab-upcoming-bookings">                
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="row">
@@ -73,6 +73,18 @@
             </div>
 
             <div class="tab-pane fade" id="consultations" role="tabpanel" aria-labelledby="tab-consultations">
+                <div class="row ">
+                    <div class="col input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="consultFilter">Filter</label>
+                          </div>
+                        <select class="custom-select" id="consultFilter" onchange="loadConsultations()">
+                            <option value="All" selected>All</option>
+                            <option value="Upcoming">Upcoming</option>
+                            <option value="Previous">Previous</option>
+                        </select>
+                    </div>
+                </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="row">

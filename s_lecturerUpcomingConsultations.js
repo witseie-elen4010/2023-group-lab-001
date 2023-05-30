@@ -15,13 +15,19 @@ async function findLecturerUpcomingConsultations(personId)
     }
 }
 
-async function allConsultations(personId)
+async function allConsultations(personId, filter)
 {
     try {
         //Strip the time component out of the dates to avoid time-zone 
         //related date changes due to differences between node server local time and
         //database server time zone
-        const [results] = await conn.promise().query("SELECT e.Id, e.PersonId, e.DOW, DATE_FORMAT(StartDate,'%Y-%m-%d') StartDate,DATE_FORMAT(EndDate,'%Y-%m-%d') EndDate, StartTime, EndTime, Duration, SlotsPerDay, Description  FROM event e WHERE PersonId = ?", [personId])
+        let [results] = []
+        if (filter === "All")
+            [results] = await conn.promise().query("SELECT e.Id, e.PersonId, e.DOW, DATE_FORMAT(StartDate,'%Y-%m-%d') StartDate,DATE_FORMAT(EndDate,'%Y-%m-%d') EndDate, StartTime, EndTime, Duration, SlotsPerDay, Description  FROM event e WHERE PersonId = ? ORDER BY StartDate, StartTime", [personId])
+        else if (filter === "Previous")
+            [results] = await conn.promise().query("SELECT e.Id, e.PersonId, e.DOW, DATE_FORMAT(StartDate,'%Y-%m-%d') StartDate,DATE_FORMAT(EndDate,'%Y-%m-%d') EndDate, StartTime, EndTime, Duration, SlotsPerDay, Description  FROM event e WHERE PersonId = ? AND StartDate < ? ORDER BY StartDate, StartTime", [personId, new Date().toISOString().slice(0,10)])
+        else
+            [results] = await conn.promise().query("SELECT e.Id, e.PersonId, e.DOW, DATE_FORMAT(StartDate,'%Y-%m-%d') StartDate,DATE_FORMAT(EndDate,'%Y-%m-%d') EndDate, StartTime, EndTime, Duration, SlotsPerDay, Description  FROM event e WHERE PersonId = ? AND StartDate >= ? ORDER BY StartDate, StartTime", [personId, new Date().toISOString().slice(0,10)])
         //console.log(results)
         return results
     } catch (error) {
