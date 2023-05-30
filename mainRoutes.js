@@ -221,8 +221,20 @@ mainRouter.post('/dashboard', authMiddleware('teacher'), async function (req, re
 mainRouter.get('/lecturerUpcomingConsultations', authMiddleware('teacher'), async function (req, res) {
   userID = req.cookies.userID
   res.type('application/json')
+  filter = req.query.filter
+  console.log(filter)
+  const results = await lecUpcomingConsults.findLecturerUpcomingConsultations(userID,filter)
+  res.send(results)
+})
 
-  const results = await lecUpcomingConsults.findLecturerUpcomingConsultations(userID)
+//Route to get all lecturer consultations
+mainRouter.get('/lecturerAllConsultations', authMiddleware('teacher'), async function (req, res) {
+  userID = req.cookies.userID
+  filter = req.query.filter
+  
+  res.type('application/json')
+
+  const results = await lecUpcomingConsults.allConsultations(userID,filter)
   res.send(results)
 })
 
@@ -234,6 +246,19 @@ mainRouter.post('/lecDeleteBooking', authMiddleware('teacher'), async function (
   // Log the action
   const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const params = [req.cookies.userID, "Lecturer deleted a booking", timestamp];
+  await conn.promise().query("INSERT INTO log (PersonId, Action, TimeStamp) VALUES (?, ?, ?)", params);
+
+  res.send(result)
+})
+
+mainRouter.post('/lecDeleteEvent', authMiddleware('teacher'), async function (req, res) {
+  res.type('application/json')
+  const bookingID = req.body.bookingID
+  const result = await lecDeleteUpcomingBooking.lecDeleteEvent(bookingID)
+
+  // Log the action
+  const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const params = [req.cookies.userID, "Lecturer deleted an event", timestamp];
   await conn.promise().query("INSERT INTO log (PersonId, Action, TimeStamp) VALUES (?, ?, ?)", params);
 
   res.send(result)
@@ -258,7 +283,7 @@ mainRouter.get('/logout', async function (req, res) {
 mainRouter.get('/logData', async function (req, res) {
   try {
     const [rows, fields] = await conn.promise().query(
-      `SELECT p.Name, p.Role, l.Action, l.TimeStamp 
+      `SELECT p.Name, p.Role, l.Action, DATE_FORMAT(l.TimeStamp,'%Y-%m-%d %T') TimeStamp 
        FROM log l
        INNER JOIN person p ON l.PersonId = p.Id
        ORDER BY l.TimeStamp DESC`

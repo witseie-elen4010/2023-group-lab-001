@@ -320,10 +320,10 @@ function processConsults (res) {
   for (let i = 0; i < res.length; i++) {
     // Process each consultation
     const startDate = res[i].StartDate
-    const actualDate = startDate.substr(0, startDate.indexOf('T'))
+    const actualDate = startDate
 
     const consultationDate = new Date(actualDate) // Convert the actualDate to a Date object
-
+    
     let daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 60 * 60 * 24)) // Calculate the number of days until the consultation
     if (daysUntilConsultation === 0) {
       daysUntilConsultation = 'Your consultation is today. Please be on time.'

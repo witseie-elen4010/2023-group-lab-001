@@ -5,7 +5,7 @@ const pool = require('./db_connection')
 // Function to retrieve all events from the database
 async function getAllEvents () {
   try {
-    const events = await pool.promise().query(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime, e.StartDate AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
+    const events = await pool.promise().query(`SELECT p.Name AS PersonName, e.RecurringWeeks AS NumberOfWeeks, e.Description AS EventDescription, e.StartTime AS EventStartTime,  DATE_FORMAT(e.StartDate,'%Y-%m-%d') AS EventDate, e.Duration AS EventDuration, e.SlotsPerDay, e.Id AS EventId, COALESCE(eb.EventBookingCount, 0) AS EventBookingCount
                                               FROM event e
                                               JOIN person p ON e.PersonId = p.Id
                                               LEFT JOIN(
@@ -14,6 +14,7 @@ async function getAllEvents () {
                                                   GROUP BY eventId
                                                   ) AS eb ON e.Id = eb.eventId
                                               WHERE COALESCE(eb.EventBookingCount, 0) < e.SlotsPerDay;`) // Adjust the SQL query based on your table name and structure
+    
     return events
   } catch (error) {
     console.error('Error retrieving events:', error)
@@ -24,7 +25,7 @@ async function getAllEvents () {
 async function getAllConsults (personId) {
   try {
     // Use prepared statements to sanitize inputs to protect from SQL injection attacks
-    const query = 'SELECT e.StartTime, e.Duration, e.StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?'
+    const query = "SELECT e.StartTime, e.Duration, DATE_FORMAT(eb.Date,'%Y-%m-%d') StartDate, e.Description, eb.eventId, eb.Id AS bookingId, p.name AS lecturerName FROM event_booking eb JOIN event e ON eb.EventId = e.Id JOIN person p ON p.Id = e.PersonId WHERE eb.personId = ?"
     const [results] = await pool.promise().query(query, [personId])
     // console.log(results)
     return results
