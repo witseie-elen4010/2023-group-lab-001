@@ -30,9 +30,9 @@ function createUpcomingEntry (consultation) {
   content.push(`<div class="col-md-2 font-weight-bold">${consultation.studentName}</div>`)
   content.push(`<div class="col-md-3">${consultation.Description}</div>`)
   content.push(`<div class="col-md-3">${new Date(consultation.Date).toISOString().split('T')[0]} @ ${consultation.StartTime}</div>`)
-  content.push(`<div class="col-md-2">${consultation.Duration} mins</div>`)
+  content.push(`<div class="col-md-1">${consultation.Duration} mins</div>`)
   content.push(`<div class="col-md-1"><button class="btn btn-danger" onclick="deleteBooking(${consultation.Id})">Delete</button></div>`)
-  content.push(`<div class="col-md-1"><button class="btn btn-success" onclick="redirectToGoogleCalendar('${consultation.Description}', '${consultation.studentName}', '${new Date(consultation.Date).toISOString().split('T')[0]}', '${consultation.StartTime}', ${consultation.Duration})">Add to calendar</button></div>`)
+  content.push(`<div class="col-md-2"><button class="btn btn-success" onclick="redirectToGoogleCalendar('${consultation.Description}', '${consultation.studentName}', '${new Date(consultation.Date).toISOString().split('T')[0]}', '${consultation.StartTime}', ${consultation.Duration})">Add to calendar</button></div>`)
   content.push('</div></li>')
   return content.join('')
 }
