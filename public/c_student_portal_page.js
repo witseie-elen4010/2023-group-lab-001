@@ -1,31 +1,5 @@
 'use strict'
 
-// Get current date
-const currentDate = new Date()
-const currentDay = currentDate.getDate()
-
-// Get month and year
-const options = { month: 'long', year: 'numeric' }
-const monthYearString = currentDate.toLocaleDateString('en-US', options)
-
-// Set month and year in the calendar header
-document.querySelector('.month').textContent = monthYearString
-
-// Generate calendar days
-const calendarDays = document.querySelector('.row')
-
-for (let day = 1; day <= 31; day++) {
-  const calendarDay = document.createElement('div')
-  calendarDay.classList.add('col-2', 'day')
-  calendarDay.textContent = day
-
-  if (day === currentDay) {
-    calendarDay.classList.add('today')
-  }
-
-  calendarDays.appendChild(calendarDay)
-}
-
 // Function to handle event booking
 async function bookEvent (EventId, EventDate) {
   const date = new Date(EventDate)
@@ -206,18 +180,6 @@ function generateTable (events) {
     })
     buttonCell.appendChild(bookButton)
     row.appendChild(buttonCell)
-
-    // // Create a button element
-    // const buttonCalCell = document.createElement('td')
-    // const calendarButton = document.createElement('button')
-    // calendarButton.textContent = 'Add to Calendar'
-    // calendarButton.classList.add('btn', 'btn-success')
-    // // Add event listener to the button
-    // calendarButton.addEventListener('click', function () {
-    //   redirectToGoogleCalendar(event.EventDescription, event.PersonName, event.EventDate, event.EventStartTime, event.EventDuration)
-    // })
-    // buttonCalCell.appendChild(calendarButton)
-    // row.appendChild(buttonCalCell)
 
     tbody.appendChild(row)
   })
