@@ -13,26 +13,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-
-
     <style>
-        .logo-container {
-            width: 400px;
-            margin-top: -130px;
-            margin-bottom: -170px;
-
-        }
-
-        .container-fluid {
-            max-width: 1500px;
-            /* Adjusts value to desired width */
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 1500px;
-            /* Adjusts value to desired width */
-            margin: 0 auto;
+        body {
+            background-color: #f8f9fa;
         }
 
         .calendar {
@@ -83,14 +66,14 @@
 </head>
 
 <body>
+    <div class="container">
+        <img class="img-fluid" src="logo_cropped.jpeg" alt="Consulta">
+    </div>
 
     <header class="primary">
         <div class="container">
-            <div class="logo-container mx-auto">
-                <img src="logo.png" alt="Consulta logo" class="img-fluid">
-            </div>
             <div style="position: relative;">
-                <h1 class="text-center my-5">Student Portal</h1>
+                <h1 class="text-center my-3">Student Portal</h1>
                 <button onclick="location.href='/logout'" style="position: absolute; top: 20%; right: 0;"
                     class="btn btn-secondary">Logout</button>
             </div>
@@ -112,7 +95,6 @@
             <h2 id="book-consultation">Book a Consultation</h2>
         </div>
 
-
         <div class="container">
             <h2>Select an option:</h2>
             <select id="lecturerDropDown" onchange="generateFilteredEventTable()" class="form-control">
@@ -129,6 +111,7 @@
                 </table>
             </div>
         </div>
+
         <div class="container">
             <div class="calendar">
                 <h2 id="consultation-view">View Consultations:</h2>
@@ -137,29 +120,48 @@
             </div>
         </div>
 
-        <body>
-            <div class="container">
-                <h1>Upcoming Consultations</h1>
-                <ul class="list-group" id="upcomingConsultations">
-                    <!-- Upcoming consultations will be dynamically generated here -->
-                </ul>
+        <div class="container mt-5">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="upcomingTab" data-toggle="tab" href="#upcoming">Upcoming
+                        Consultations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pastTab" data-toggle="tab" href="#past">Past Consultations</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="upcoming">
+                    <div class="container">
+                        <h1>Upcoming Consultations</h1>
+                        <ul class="list-group" id="upcomingConsultations">
+                            <!-- Upcoming consultations will be dynamically generated here -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="past">
+                    <div class="container">
+                        <h1>Past Consultations</h1>
+                        <ul class="list-group" id="pastConsultations">
+                            <!-- Past consultations will be dynamically generated here -->
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </body>
+        </div>
     </main>
 
-    </div>
-    <footer class="text-center mt-5">
-        <p>&copy; Consulta</p>
+    <footer class="bg-light py-3">
+        <div class="container">
+            <p>&copy; Consulta</p>
+        </div>
     </footer>
 
     <!-- Bootstrap JS -->
-
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <!-- Custom JS -->
     <script src="c_student_portal_page.js"></script>
-
-
 </body>
 
 </html>
