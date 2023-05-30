@@ -126,7 +126,6 @@ function getFilterEvents (allEvents) {
     const selectedLecturerOption = lecturerDropDown.options[lecturerDropDown.selectedIndex].text
     console.log(selectedLecturerOption)
     if (selectedLecturerOption === 'All') {
-      console.log(allEvents)
       return allEvents
     }
 
@@ -208,6 +207,18 @@ function generateTable (events) {
     buttonCell.appendChild(bookButton)
     row.appendChild(buttonCell)
 
+    // // Create a button element
+    // const buttonCalCell = document.createElement('td')
+    // const calendarButton = document.createElement('button')
+    // calendarButton.textContent = 'Add to Calendar'
+    // calendarButton.classList.add('btn', 'btn-success')
+    // // Add event listener to the button
+    // calendarButton.addEventListener('click', function () {
+    //   redirectToGoogleCalendar(event.EventDescription, event.PersonName, event.EventDate, event.EventStartTime, event.EventDuration)
+    // })
+    // buttonCalCell.appendChild(calendarButton)
+    // row.appendChild(buttonCalCell)
+
     tbody.appendChild(row)
   })
 
@@ -216,6 +227,35 @@ function generateTable (events) {
   table.appendChild(tbody)
 
   return table
+}
+
+function redirectToGoogleCalendar (eventDescription, personName, eventDate, eventStartTime, eventDuration) {
+  // Convert the date and time inputs to the required format
+  const eventDateTime = new Date(eventDate + 'T' + eventStartTime)
+  const eventEndTime = new Date(eventDateTime.getTime() + (eventDuration * 60000)) // Event duration in minutes
+
+  // Format the date and time strings for Google Calendar
+  const eventDates = eventDateTime.toISOString().replace(/[-:]/g, '').slice(0, -5) + 'Z/' +
+    eventEndTime.toISOString().replace(/[-:]/g, '').slice(0, -5) + 'Z'
+
+  // Replace the placeholders with the provided values
+  const calendarUrl = 'https://calendar.google.com/calendar/r/eventedit'
+  const eventDetails = {
+    text: eventDescription,
+    dates: eventDates,
+    details: 'Organized by: ' + personName,
+    location: ''
+  }
+
+  // Construct the URL with event details
+  const url = calendarUrl +
+    '?text=' + encodeURIComponent(eventDetails.text) +
+    '&dates=' + encodeURIComponent(eventDetails.dates) +
+    '&details=' + encodeURIComponent(eventDetails.details) +
+    '&location=' + encodeURIComponent(eventDetails.location)
+
+  // Redirect the user to Google Calendar
+  window.open(url, '_blank')
 }
 
 async function getAllEvents () {
@@ -329,7 +369,7 @@ function processConsults (res) {
       daysUntilConsultation = 'Your consultation is today. Please be on time.'
     }
     const truncatedDate = consultationDate.toString().slice(0, 15) // remove the time from the date
-    showConsultation(res[i].lecturerName, truncatedDate, res[i].StartTime, res[i].Duration, daysUntilConsultation, res[i].bookingId, res[i].Description)
+    showConsultation(res[i].lecturerName, truncatedDate, res[i].StartTime, res[i].Duration, daysUntilConsultation, res[i].bookingId, res[i].Description, actualDate)
   }
 }
 
@@ -368,7 +408,7 @@ getAllEvents()
     console.error('Error:', error) // Handle the rejected error here
   })
 
-function showConsultation (name, date, time, duration, daysUntil, bookingId, description) {
+function showConsultation (name, date, time, duration, daysUntil, bookingId, description, standardDate) {
   // Create a new list item for the consultation
   const consultationItem = document.createElement('li')
   consultationItem.classList.add('list-group-item', 'mb-3')
@@ -415,12 +455,22 @@ function showConsultation (name, date, time, duration, daysUntil, bookingId, des
   const cancelButtonRow = document.createElement('tr')
 
   const cancelButtonCell = document.createElement('td')
-  cancelButtonCell.setAttribute('colspan', '2')
+  cancelButtonCell.setAttribute('colspan', '1')
   cancelButtonCell.classList.add('text-end') // Align button to the right
+
+  // Add to calendar button
+  const calendarButtonCell = document.createElement('td')
+  calendarButtonCell.setAttribute('colspan', '1')
+  calendarButtonCell.classList.add('text-start') // Align button to the right
 
   const cancelButton = document.createElement('button')
   cancelButton.classList.add('btn', 'btn-danger')
   cancelButton.textContent = 'Cancel'
+
+  // Actuall calendar button
+  const calendarButton = document.createElement('button')
+  calendarButton.classList.add('btn', 'btn-success')
+  calendarButton.textContent = 'Add to Calendar'
 
   // Add cancel button click event handler
   cancelButton.addEventListener('click', function () {
@@ -429,8 +479,16 @@ function showConsultation (name, date, time, duration, daysUntil, bookingId, des
     deleteConsult(bookingId)
   })
 
+  // Add calendar button click event handler
+  calendarButton.addEventListener('click', function () {
+    // This function will be called when the calendar button is clicked
+    redirectToGoogleCalendar(description, name, standardDate, time, duration)
+  })
+
   cancelButtonCell.appendChild(cancelButton)
+  calendarButtonCell.appendChild(calendarButton)
   cancelButtonRow.appendChild(cancelButtonCell)
+  cancelButtonRow.appendChild(calendarButtonCell)
   table.appendChild(cancelButtonRow)
 
   // Append the table to the consultation item
