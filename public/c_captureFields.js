@@ -3,7 +3,7 @@ function loadBookings() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerUpcomingConsultations?filter=' + $('#bookingFilter').val(), // URL that the POST is sent to
+    url: './lecturerUpcomingConsultations?filter=' + $('#bookingFilter').val() // URL that the POST is sent to
   }).done(function (res) {
     populateUpcoming(res)
   })
@@ -25,16 +25,45 @@ function createUpcomingEntry(consultation) {
 
   const consultationDate = new Date(consultation.Date) // Convert the consultation date to a Date object
 
-
   content.push('<li class="list-group-item">')
   content.push('<div class="row">')
   content.push(`<div class="col-md-2 font-weight-bold">${consultation.studentName}</div>`)
   content.push(`<div class="col-md-3">${consultation.Description}</div>`)
   content.push(`<div class="col-md-3">${new Date(consultation.Date).toISOString().split('T')[0]} @ ${consultation.StartTime}</div>`)
-  content.push(`<div class="col-md-2">${consultation.Duration} mins</div>`)
-  content.push(`<div class="col-md-2"><button class="btn btn-danger" onclick="deleteBooking(${consultation.Id})">Delete</button></div>`)
+  content.push(`<div class="col-md-1">${consultation.Duration} mins</div>`)
+  content.push(`<div class="col-md-1"><button class="btn btn-danger" onclick="deleteBooking(${consultation.Id})">Delete</button></div>`)
+  content.push(`<div class="col-md-2"><button class="btn btn-success" onclick="redirectToGoogleCalendar('${consultation.Description}', '${consultation.studentName}', '${new Date(consultation.Date).toISOString().split('T')[0]}', '${consultation.StartTime}', ${consultation.Duration})">Add to calendar</button></div>`)
   content.push('</div></li>')
   return content.join('')
+}
+
+function redirectToGoogleCalendar(eventDescription, personName, eventDate, eventStartTime, eventDuration) {
+  // Convert the date and time inputs to the required format
+  const eventDateTime = new Date(eventDate + 'T' + eventStartTime)
+  const eventEndTime = new Date(eventDateTime.getTime() + (eventDuration * 60000)) // Event duration in minutes
+
+  // Format the date and time strings for Google Calendar
+  const eventDates = eventDateTime.toISOString().replace(/[-:]/g, '').slice(0, -5) + 'Z/' +
+    eventEndTime.toISOString().replace(/[-:]/g, '').slice(0, -5) + 'Z'
+
+  // Replace the placeholders with the provided values
+  const calendarUrl = 'https://calendar.google.com/calendar/r/eventedit'
+  const eventDetails = {
+    text: eventDescription,
+    dates: eventDates,
+    details: 'Student attending consultation: ' + personName,
+    location: ''
+  }
+
+  // Construct the URL with event details
+  const url = calendarUrl +
+    '?text=' + encodeURIComponent(eventDetails.text) +
+    '&dates=' + encodeURIComponent(eventDetails.dates) +
+    '&details=' + encodeURIComponent(eventDetails.details) +
+    '&location=' + encodeURIComponent(eventDetails.location)
+
+  // Redirect the user to Google Calendar
+  window.open(url, '_blank')
 }
 
 function deleteBooking(id) {
@@ -51,14 +80,14 @@ function deleteBooking(id) {
   })
 }
 
-//Code to fetch and show all of the consultations the lecturer has created:
+// Code to fetch and show all of the consultations the lecturer has created:
 
 function loadConsultations() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
-    url: './lecturerAllConsultations?filter=' + $('#consultFilter').val(),// URL that the POST is sent to
-  
+    url: './lecturerAllConsultations?filter=' + $('#consultFilter').val()// URL that the POST is sent to
+
   }).done(function (res) {
     console.log(res)
     populateUpcomingConsultations(res)
@@ -77,9 +106,9 @@ function populateUpcomingConsultations(consultations) {
 
 function createConsulationEntry(event) {
   const content = []
-  
+
   const eventDate = new Date(event.StartDate)
-  
+
   content.push('<li class="list-group-item">')
   content.push('<div class="row">')
   content.push(`<div class="col-md-3 font-weight-bold">${event.Description}</div>`)
@@ -133,11 +162,11 @@ function previewConsultation(e) {
 
   const startTime = document.getElementById('start-time').value
   const endTime = document.getElementById('end-time').value
-  
+
   const startTicks = new Date(startDate.toISOString().substring(0, 10) + ' ' + startTime).getTime()
   const endTicks = new Date(startDate.toISOString().substring(0, 10) + ' ' + endTime).getTime()
 
-    // Check end time is valid:
+  // Check end time is valid:
   if (new Date('1970/01/01 ' + endTime) < new Date('1970/01/01 ' + startTime)) {
     alert('Cannot end a consultation before it starts. \nPlease reselect end time')
     return
@@ -146,9 +175,6 @@ function previewConsultation(e) {
 
     return
   }
-
- 
-  
 
   const maxConsultStudents = document.getElementById('max-consults-students').value
   let recurringWeeks = document.getElementById('num-weeks-recurring').value
@@ -183,38 +209,29 @@ function previewConsultation(e) {
     consultationSummaryString += '<br />' + 'Description: ' + description
   }
 
-
   document.getElementById('consultationSummaryModalBody').innerHTML = (consultationSummaryString)
 
-   //Check consultation doesn't overlap with existing consultations
-   $.ajax({
+  // Check consultation doesn't overlap with existing consultations
+  $.ajax({
     type: 'GET',
     contentType: 'application/json',
     url: './lecturerAllConsultations?filter=All' // URL that the POST is sent to
-    
+
   }).done(function (res) {
-    let conflict = false;
-    for (let i = 0; i < res.length; i++)
-    {
-      const eStartTicks = new Date (res[i].StartDate + ' ' + res[i].StartTime).getTime()
-      const eEndTicks = new Date (res[i].EndDate + ' ' + res[i].EndTime).getTime()
-      if((eStartTicks <= endTicks) && (eEndTicks >= startTicks))
-      {
-        
+    let conflict = false
+    for (let i = 0; i < res.length; i++) {
+      const eStartTicks = new Date(res[i].StartDate + ' ' + res[i].StartTime).getTime()
+      const eEndTicks = new Date(res[i].EndDate + ' ' + res[i].EndTime).getTime()
+      if ((eStartTicks <= endTicks) && (eEndTicks >= startTicks)) {
         alert(`Cannot create consultation - consultation: ${res[i].Description} has a conflicting time`)
         conflict = true
         return
       }
     }
-    if(!conflict)
-    {
+    if (!conflict) {
       $('#consultationSummary').modal('show')
-      return
     }
   })
-
-  
-  
 
   // get day of week to store in database
   const dow = startDate.toString().substring(0, 3)

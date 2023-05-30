@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             data.forEach(logEntry => {
                 const div = document.createElement('div');
                 div.className = 'log-entry';
-                
+
                 const nameElement = document.createElement('span');
                 nameElement.innerHTML = `<span class="name">Name:</span> <span class="value">${logEntry.Name}</span>`;
                 div.appendChild(nameElement);

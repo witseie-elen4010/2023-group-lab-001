@@ -55,27 +55,28 @@
         </ul>
         <div class="tab-content card mb-3" id="tab-content">
             <div class="tab-pane fade show active" id="upcoming-bookings" role="tabpanel"
-                aria-labelledby="tab-upcoming-bookings"> 
+                aria-labelledby="tab-upcoming-bookings">
                 <div class="row ">
                     <div class="col input-group">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="bookingFilter">Filter</label>
-                          </div>
+                        </div>
                         <select class="custom-select" id="bookingFilter" onchange="loadBookings()">
                             <option value="All" selected>All</option>
                             <option value="Upcoming">Upcoming</option>
                             <option value="Previous">Previous</option>
                         </select>
                     </div>
-                </div>               
+                </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-2 font-weight-bold">Student Name</div>
                             <div class="col-md-3 font-weight-bold">Description</div>
                             <div class="col-md-3 font-weight-bold">Date & Time</div>
-                            <div class="col-md-2 font-weight-bold">Duration</div>
-                            <div class="col-md-2 font-weight-bold">Delete</div>
+                            <div class="col-md-1 font-weight-bold">Duration</div>
+                            <div class="col-md-1 font-weight-bold">Delete</div>
+                            <div class="col-md-2 font-weight-bold">Add to Calendar</div>
                         </div>
                     </li>
                     <div class="overflow-auto" style="max-height: 400px;">
@@ -89,7 +90,7 @@
                     <div class="col input-group">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="consultFilter">Filter</label>
-                          </div>
+                        </div>
                         <select class="custom-select" id="consultFilter" onchange="loadConsultations()">
                             <option value="All" selected>All</option>
                             <option value="Upcoming">Upcoming</option>
@@ -149,14 +150,15 @@
                     <!--Recurring radio btn-->
                     <label for="recurring">Do you want this consultation to be recurring?</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="recurring" id="recurring-no" value="no" checked>
+                        <input class="form-check-input" type="radio" name="recurring" id="recurring-no" value="no"
+                            checked>
                         <label class="form-check-label" for="recurring-no">No</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="recurring" id="recurring-yes" value="yes">
                         <label class="form-check-label" for="recurring-yes">Yes</label>
                     </div>
-                    
+
 
                 </div>
 
@@ -165,16 +167,16 @@
                     <input type="number" value="1" class="form-control" id="num-weeks-recurring"
                         name="num-weeks-recurring" min="1">
                 </div>
-        
 
-                
-                    <div class="form-group">
-                        <label for="description">Please write any special info about this consultation:</label>
-                        <input type="string" class="form-control" id="description" name="description" required>
-                    </div>
-                    <button type="submit" id="save-chages" class="btn btn-primary">Preview Consultation...</button>
-            
-                
+
+
+                <div class="form-group">
+                    <label for="description">Please write any special info about this consultation:</label>
+                    <input type="string" class="form-control" id="description" name="description" required>
+                </div>
+                <button type="submit" id="save-chages" class="btn btn-primary">Preview Consultation...</button>
+
+
             </form>
         </div>
 

@@ -165,3 +165,50 @@ describe('testing the deletion of a consultation', () => {
         expect(mockQuery).toHaveBeenCalledWith('DELETE FROM event_booking WHERE Id = ?', [mockId])
     })
 })
+
+const { chromium } = require('playwright');
+jest.setTimeout(30000);
+describe('Lecturer Page functionality', () => {
+    let browser, page;
+
+    beforeAll(async () => {
+        browser = await chromium.launch();
+    });
+
+    afterAll(async () => {
+        await browser.close();
+    });
+
+    beforeEach(async () => {
+        page = await browser.newPage();
+    });
+
+    afterEach(async () => {
+        await page.close();
+    });
+
+    test('Lecturer logout test', async () => {
+        await page.goto('https://consultamain.azurewebsites.net/');
+        await page.type('#login-email', 'steve@wits.ac.za');
+        await page.type('#login-password', 'software');
+        // Click the button and then wait for the URL to change
+        await Promise.all([
+            page.click('#login-btn'),
+            page.waitForFunction('window.location.href.includes("/lecturer_dashboard")')
+        ]);
+
+        // Check that user is redirected to correct page
+        expect(await page.url()).toBe('https://consultamain.azurewebsites.net/lecturer_dashboard');
+
+        // Click the logout button
+        await Promise.all([
+            page.click('button.btn-secondary'),
+            page.waitForNavigation()
+        ]);
+
+        // Check that user is redirected to the login page
+        expect(await page.url()).toBe('https://consultamain.azurewebsites.net/');
+    });
+
+
+})

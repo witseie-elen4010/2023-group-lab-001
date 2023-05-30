@@ -18,41 +18,41 @@ describe('Signup functionality', () => {
         // Reset the mock functions
         bcrypt.compare.mockReset();
         pool.query.mockReset();
-     });
-   
+    });
+
 
     test('adds new student correctly to the database', async () => {
         const mockUser = {
-          name: 'Jack Test',
-          email: 'jack@students.wits.ac.za',
-          password: 'password123',
-          role: 'student',
+            name: 'Jack Test',
+            email: 'jack@students.wits.ac.za',
+            password: 'password123',
+            role: 'student',
         };
-      
+
         const mockHashedPassword = 'hashed_password123';
         bcrypt.hash.mockResolvedValueOnce(mockHashedPassword);
-        
+
         // Mock the return value of the pool's query function
         pool.query.mockResolvedValueOnce([[{ insertId: 1, affectedRows: 1 }]])
-      .mockResolvedValueOnce([[{ id: 1 }]]);
+            .mockResolvedValueOnce([[{ id: 1 }]]);
 
 
 
-      
+
         const res = await addUser(mockUser.name, mockUser.email, mockUser.password, mockUser.role);
-      
+
         // Assertions
         expect(res.status).toBe('Valid');
         expect(res.href).toBe('./student_portal_page');
-      
+
         // Check if the query is called with the correct SQL and parameters
         // The password sent to the query should now be the hashed password
         expect(pool.query).toBeCalledWith(
-          "INSERT INTO person (Name, Email, Password, Role) VALUES (?, ?, ?, ?)",
-          [mockUser.name, mockUser.email, mockHashedPassword, mockUser.role],
+            "INSERT INTO person (Name, Email, Password, Role) VALUES (?, ?, ?, ?)",
+            [mockUser.name, mockUser.email, mockHashedPassword, mockUser.role],
         );
-      });
-      
+    });
+
 
     test('adds new teacher correctly to the database', async () => {
         const mockUser = {
@@ -67,7 +67,7 @@ describe('Signup functionality', () => {
 
         // Mock the return value of the pool's query function
         pool.query.mockResolvedValueOnce([[{ insertId: 1, affectedRows: 1 }]])
-      .mockResolvedValueOnce([[{ id: 1 }]]);
+            .mockResolvedValueOnce([[{ id: 1 }]]);
 
 
 
@@ -157,4 +157,47 @@ describe('Signup functionality with hashed password', () => {
         expect(bcrypt.hash).toBeCalledWith(mockUser.password, 10);
     });
 });
+
+const { chromium } = require('playwright');
+const randomstring = require('randomstring');
+
+jest.setTimeout(30000);
+describe('Signup functionality', () => {
+    let browser, page;
+
+    beforeAll(async () => {
+        browser = await chromium.launch();
+    });
+
+    afterAll(async () => {
+        await browser.close();
+    });
+
+    beforeEach(async () => {
+        page = await browser.newPage();
+    });
+
+    afterEach(async () => {
+        await page.close();
+    });
+
+    test('Test sign up', async () => {
+        await page.goto('https://consultamain.azurewebsites.net/');
+        await page.click('#teacher');
+        await page.type('#signup-firstname', 'Jack');
+        await page.type('#signup-lastname', 'Teacher');
+        const email = randomstring.generate() + "@wits.ac.za"; // Generate a unique email
+        await page.type('#signup-email', email);
+        await page.type('#signup-password', 'password');
+        // Click the button and then wait for the URL to change
+        await Promise.all([
+            page.click('#signup-btn'),
+            page.waitForFunction('window.location.href.includes("/lecturer_dashboard")')
+        ]);
+        // Check that user is redirected to the correct page
+        expect(await page.url()).toBe('https://consultamain.azurewebsites.net/lecturer_dashboard');
+    });
+
+});
+
 
