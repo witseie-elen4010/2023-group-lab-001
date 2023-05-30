@@ -560,14 +560,14 @@ function showConsultation(isPast, name, date, time, duration, daysUntil, booking
     cancelButtonRow.appendChild(cancelButtonCell)
     cancelButtonRow.appendChild(calendarButtonCell)
     table.appendChild(cancelButtonRow)
-
+  }
     // Append the table to the consultation item
     consultationItem.appendChild(table)
-
+  
     // Append the consultation item to the appropriate container
     const consultationList = isPast ? document.getElementById('pastConsultations') : document.getElementById('upcomingConsultations')
     consultationList.appendChild(consultationItem)
-  }
+  
 }
 
 function deleteConsult(id) {
