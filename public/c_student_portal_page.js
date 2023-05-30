@@ -485,14 +485,3 @@ function deleteAllConsultations () {
     consultationList.firstChild.remove()
   }
 }
-
-// For testing
-module.exports = {
-  sortEvents,
-  generateLecturerOptions,
-  generateHTMLLectuerOptions,
-  getFilterEvents,
-  generateTable,
-  redirectToGoogleCalendar,
-  filterAlreadyBookedConsultations
-}
