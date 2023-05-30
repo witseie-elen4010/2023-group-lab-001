@@ -14,6 +14,7 @@ async function getAllEvents () {
                                                   GROUP BY eventId
                                                   ) AS eb ON e.Id = eb.eventId
                                               WHERE COALESCE(eb.EventBookingCount, 0) < e.SlotsPerDay;`) // Adjust the SQL query based on your table name and structure
+    
     return events
   } catch (error) {
     console.error('Error retrieving events:', error)

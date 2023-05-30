@@ -6,7 +6,7 @@ async function lecDeleteBooking(bookingID) {
         // console.log(result)
         return { status: 'Completed' }
     } catch (error) {
-        console.error('Error retrieving events:', error)
+        console.error('Error deleting booking:', error)
         throw error
     }
 }
@@ -17,7 +17,7 @@ async function lecDeleteEvent(eventID) {
         // console.log(result)
         return { status: 'Completed' }
     } catch (error) {
-        console.error('Error retrieving events:', error)
+        console.error('Error deleting consultation event:', error)
         throw error
     }
 }
