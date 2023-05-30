@@ -1,33 +1,7 @@
 'use strict'
 
-// Get current date
-const currentDate = new Date()
-const currentDay = currentDate.getDate()
-
-// Get month and year
-const options = { month: 'long', year: 'numeric' }
-const monthYearString = currentDate.toLocaleDateString('en-US', options)
-
-// Set month and year in the calendar header
-document.querySelector('.month').textContent = monthYearString
-
-// Generate calendar days
-const calendarDays = document.querySelector('.row')
-
-for (let day = 1; day <= 31; day++) {
-  const calendarDay = document.createElement('div')
-  calendarDay.classList.add('col-2', 'day')
-  calendarDay.textContent = day
-
-  if (day === currentDay) {
-    calendarDay.classList.add('today')
-  }
-
-  calendarDays.appendChild(calendarDay)
-}
-
 // Function to handle event booking
-async function bookEvent(EventId, EventDate) {
+async function bookEvent (EventId, EventDate) {
   const date = new Date(EventDate)
   const formattedDate = date.toISOString().split('T')[0]
   // console.log(formattedDate)
@@ -62,7 +36,7 @@ async function bookEvent(EventId, EventDate) {
   }
 }
 
-function sortEvents(events) {
+function sortEvents (events) {
   events[0].sort((a, b) => {
     const dateA = new Date(a.EventDate)
     const dateB = new Date(b.EventDate)
@@ -79,7 +53,7 @@ function sortEvents(events) {
   })
 }
 
-function addMultipleWeekEvents(events) {
+function addMultipleWeekEvents (events) {
   const newEvents = [] // Separate array to hold newly generated events
 
   for (let i = 0; i < events[0].length; i++) {
@@ -99,7 +73,7 @@ function addMultipleWeekEvents(events) {
   return events
 }
 
-function generateLecturerOptions(events) {
+function generateLecturerOptions (events) {
   const listOfLecturers = []
   events[0].forEach(event => {
     Object.entries(event).forEach(([key, value]) => {
@@ -111,7 +85,7 @@ function generateLecturerOptions(events) {
   return new Set(listOfLecturers)
 }
 
-function generateHTMLLectuerOptions(listOfLecturers) {
+function generateHTMLLectuerOptions (listOfLecturers) {
   const dropdown = document.getElementById('lecturerDropDown')
   listOfLecturers.forEach(lecturer => {
     const lecturerOption = document.createElement('option')
@@ -120,13 +94,12 @@ function generateHTMLLectuerOptions(listOfLecturers) {
   })
 }
 
-function getFilterEvents(allEvents) {
+function getFilterEvents (allEvents) {
   if (allEvents) {
     const lecturerDropDown = document.getElementById('lecturerDropDown')
     const selectedLecturerOption = lecturerDropDown.options[lecturerDropDown.selectedIndex].text
     console.log(selectedLecturerOption)
     if (selectedLecturerOption === 'All') {
-      console.log(allEvents)
       return allEvents
     }
 
@@ -143,7 +116,7 @@ function getFilterEvents(allEvents) {
 }
 
 // Generate HTML table dynamically
-function generateTable(events) {
+function generateTable (events) {
   const table = document.createElement('table')
   table.id = 'openConsultationTable'
   table.classList.add('table', 'table-striped')
@@ -218,7 +191,36 @@ function generateTable(events) {
   return table
 }
 
-async function getAllEvents() {
+function redirectToGoogleCalendar (eventDescription, personName, eventDate, eventStartTime, eventDuration) {
+  // Convert the date and time inputs to the required format
+  const eventDateTime = new Date(eventDate + 'T' + eventStartTime)
+  const eventEndTime = new Date(eventDateTime.getTime() + (eventDuration * 60000)) // Event duration in minutes
+
+  // Format the date and time strings for Google Calendar
+  const eventDates = eventDateTime.toISOString().replace(/[-:]/g, '').slice(0, -5) + 'Z/' +
+    eventEndTime.toISOString().replace(/[-:]/g, '').slice(0, -5) + 'Z'
+
+  // Replace the placeholders with the provided values
+  const calendarUrl = 'https://calendar.google.com/calendar/r/eventedit'
+  const eventDetails = {
+    text: eventDescription,
+    dates: eventDates,
+    details: 'Organized by: ' + personName,
+    location: ''
+  }
+
+  // Construct the URL with event details
+  const url = calendarUrl +
+    '?text=' + encodeURIComponent(eventDetails.text) +
+    '&dates=' + encodeURIComponent(eventDetails.dates) +
+    '&details=' + encodeURIComponent(eventDetails.details) +
+    '&location=' + encodeURIComponent(eventDetails.location)
+
+  // Redirect the user to Google Calendar
+  window.open(url, '_blank')
+}
+
+async function getAllEvents () {
   return new Promise(function (resolve, reject) {
     $.ajax({
       type: 'GET',
@@ -258,7 +260,7 @@ async function getAllEvents() {
 
 let allEvents
 
-function removePastEvents(res) {
+function removePastEvents (res) {
   const filteredEvents = []
 
   const currentDate = new Date() // Get the current date
@@ -286,7 +288,7 @@ function removePastEvents(res) {
   return filteredEvents
 }
 
-function removeTable() {
+function removeTable () {
   // Step 1: Get a reference to the table element
   const table = document.getElementById('openConsultationTable')
 
@@ -294,13 +296,13 @@ function removeTable() {
   table.remove()
 }
 
-function filterAlreadyBookedConsultations(events, bookedConsulations) {
-  function extractAttribute(arr, attributeName) {
+function filterAlreadyBookedConsultations (events, bookedConsulations) {
+  function extractAttribute (arr, attributeName) {
     return arr.map(obj => obj[attributeName])
   }
   const bookedBookingIds = extractAttribute(bookedConsulations, 'eventId')
 
-  function deleteAlreadyBookedEvents(events, bookedConsulationIds) {
+  function deleteAlreadyBookedEvents (events, bookedConsulationIds) {
     const filteredEvents = []
     for (let i = 0; i < events.length; i++) {
       if (!(bookedConsulationIds.includes(events[i].EventId))) {
@@ -313,7 +315,7 @@ function filterAlreadyBookedConsultations(events, bookedConsulations) {
 }
 
 let allConsultations
-function getAllConsults() {
+function getAllConsults () {
   return new Promise((resolve, reject) => {
     $.ajax({
       type: 'GET',
@@ -340,7 +342,7 @@ function getAllConsults() {
 getAllConsults()
 
 // sort consults to display in order of time
-function processConsults(res) {
+function processConsults (res) {
   // Sort the events by date and time
   res.sort(function (a, b) {
     const dateA = new Date(a.StartDate)
@@ -356,7 +358,7 @@ function processConsults(res) {
   })
 }
 
-function separatePastConsults(res) {
+function separatePastConsults (res) {
   const currentDate = new Date() // Get the current date
   const currentTimeHour = parseInt(currentDate.toString().slice(15, 25)) // extract the time from the date
   const currentTimeMinute = parseInt(currentDate.toString().slice(19, 21))
@@ -393,7 +395,8 @@ function separatePastConsults(res) {
         res[i].Duration,
         daysUntilConsultation,
         res[i].bookingId,
-        res[i].Description
+        res[i].Description,
+        actualDate
       )
     } else { // display consultation in past consultations tab
       showConsultation(true,
@@ -403,7 +406,8 @@ function separatePastConsults(res) {
         res[i].Duration,
         0,
         0,
-        res[i].Description
+        res[i].Description,
+        actualDate
       )
     }
   }
@@ -437,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 })
 
-function generateFilteredEventTable() {
+function generateFilteredEventTable () {
   try {
     removeTable()
   } catch (error) {
@@ -470,7 +474,7 @@ getAllEvents()
     console.error('Error:', error) // Handle the rejected error here
   })
 
-function showConsultation(isPast, name, date, time, duration, daysUntil, bookingId, description) {
+function showConsultation (isPast, name, date, time, duration, daysUntil, bookingId, description, standardDate) {
   // Create a new list item for the consultation
   const consultationItem = document.createElement('li')
   consultationItem.classList.add('list-group-item', 'mb-3')
@@ -521,12 +525,22 @@ function showConsultation(isPast, name, date, time, duration, daysUntil, booking
     const cancelButtonRow = document.createElement('tr')
 
     const cancelButtonCell = document.createElement('td')
-    cancelButtonCell.setAttribute('colspan', '2')
+    cancelButtonCell.setAttribute('colspan', '1')
     cancelButtonCell.classList.add('text-end') // Align button to the right
+
+    // Add to calendar button
+    const calendarButtonCell = document.createElement('td')
+    calendarButtonCell.setAttribute('colspan', '1')
+    calendarButtonCell.classList.add('text-start') // Align button to the right
 
     const cancelButton = document.createElement('button')
     cancelButton.classList.add('btn', 'btn-danger')
     cancelButton.textContent = 'Cancel'
+
+    // Actuall calendar button
+    const calendarButton = document.createElement('button')
+    calendarButton.classList.add('btn', 'btn-success')
+    calendarButton.textContent = 'Add to Calendar'
 
     // Add cancel button click event handler
     cancelButton.addEventListener('click', function () {
@@ -535,20 +549,28 @@ function showConsultation(isPast, name, date, time, duration, daysUntil, booking
       deleteConsult(bookingId)
     })
 
+    // Add calendar button click event handler
+    calendarButton.addEventListener('click', function () {
+      // This function will be called when the calendar button is clicked
+      redirectToGoogleCalendar(description, name, standardDate, time, duration)
+    })
+
     cancelButtonCell.appendChild(cancelButton)
+    calendarButtonCell.appendChild(calendarButton)
     cancelButtonRow.appendChild(cancelButtonCell)
+    cancelButtonRow.appendChild(calendarButtonCell)
     table.appendChild(cancelButtonRow)
+
+    // Append the table to the consultation item
+    consultationItem.appendChild(table)
+
+    // Append the consultation item to the appropriate container
+    const consultationList = isPast ? document.getElementById('pastConsultations') : document.getElementById('upcomingConsultations')
+    consultationList.appendChild(consultationItem)
   }
-
-  // Append the table to the consultation item
-  consultationItem.appendChild(table)
-
-  // Append the consultation item to the appropriate container
-  const consultationList = isPast ? document.getElementById('pastConsultations') : document.getElementById('upcomingConsultations')
-  consultationList.appendChild(consultationItem)
 }
 
-function deleteConsult(id) {
+function deleteConsult (id) {
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
@@ -558,11 +580,15 @@ function deleteConsult(id) {
     if (res.status === 'Completed') {
       alert(`Booking: "${id}" has been deleted`)
       getAllConsults()
+        .then(() => {
+          generateFilteredEventTable()
+        }
+        )
     }
   })
 }
 
-function deleteAllConsultations() {
+function deleteAllConsultations () {
   const consultationList = document.getElementById('upcomingConsultations')
   while (consultationList.firstChild) {
     consultationList.firstChild.remove()
