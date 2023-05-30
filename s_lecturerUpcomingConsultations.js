@@ -1,6 +1,6 @@
 const conn = require('./db_connection')
 
-async function findLecturerUpcomingConsultations(personId)
+async function findLecturerUpcomingConsultations(personId, filter)
 {
     try {
         // Use prepared statements to sanitize inputs to protect from SQL injection attacks
@@ -17,7 +17,8 @@ async function findLecturerUpcomingConsultations(personId)
         //console.log(results)
         return results
     } catch (error) {
-        console.log(error)
+        console.error('Error retrieving consultation bookings:', error)
+        throw error
     }
 }
 
@@ -37,7 +38,8 @@ async function allConsultations(personId, filter)
         //console.log(results)
         return results
     } catch (error) {
-        console.log(error)
+        console.error('Error retrieving consultation events:', error)
+        throw error
     }
 }
 
