@@ -323,7 +323,7 @@ function processConsults (res) {
     const actualDate = startDate
 
     const consultationDate = new Date(actualDate) // Convert the actualDate to a Date object
-    
+
     let daysUntilConsultation = Math.ceil((consultationDate - currentDate) / (1000 * 60 * 60 * 24)) // Calculate the number of days until the consultation
     if (daysUntilConsultation === 0) {
       daysUntilConsultation = 'Your consultation is today. Please be on time.'
@@ -451,6 +451,10 @@ function deleteConsult (id) {
     if (res.status === 'Completed') {
       alert(`Booking: "${id}" has been deleted`)
       getAllConsults()
+        .then(() => {
+          generateFilteredEventTable()
+        }
+        )
     }
   })
 }
