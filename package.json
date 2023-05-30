@@ -16,7 +16,6 @@
   },
   "description": "",
   "devDependencies": {
-    "jest": "^29.5.0",
-    "jsdom": "^20.0.3"
+    "jest": "^29.5.0"
   }
 }
