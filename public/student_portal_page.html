@@ -14,8 +14,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <style>
-        body {
-            background-color: #f8f9fa;
+        .logo-container {
+            width: 400px;
+            margin-top: -130px;
+            margin-bottom: -170px;
+
+        }
+
+        .container-fluid {
+            max-width: 1500px;
+            /* Adjusts value to desired width */
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1500px;
+            /* Adjusts value to desired width */
+            margin: 0 auto;
         }
 
         .calendar {
@@ -66,14 +81,13 @@
 </head>
 
 <body>
-    <div class="container">
-        <img class="img-fluid" src="logo_cropped.jpeg" alt="Consulta">
-    </div>
-
     <header class="primary">
         <div class="container">
+            <div class="logo-container mx-auto">
+                <img src="logo.png" alt="Consulta logo" class="img-fluid">
+            </div>
             <div style="position: relative;">
-                <h1 class="text-center my-3">Student Portal</h1>
+                <h1 class="text-center my-5">Student Portal</h1>
                 <button onclick="location.href='/logout'" style="position: absolute; top: 20%; right: 0;"
                     class="btn btn-secondary">Logout</button>
             </div>
@@ -144,10 +158,9 @@
         </div>
     </main>
 
-    <footer class="bg-light py-3">
-        <div class="container">
-            <p>&copy; Consulta</p>
-        </div>
+    </div>
+    <footer class="text-center mt-5">
+        <p>&copy; Consulta</p>
     </footer>
 
     <!-- Bootstrap JS -->

@@ -1,5 +1,5 @@
 
-function loadBookings () {
+function loadBookings() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
@@ -12,7 +12,7 @@ function loadBookings () {
 loadBookings()
 
 // populate upcoming consultations section
-function populateUpcoming (consultations) {
+function populateUpcoming(consultations) {
   const content = []
   for (let i = 0; i < consultations.length; i++) {
     content.push(createUpcomingEntry(consultations[i]))
@@ -20,7 +20,7 @@ function populateUpcoming (consultations) {
   $('#upcomingBookingsList').html(content.join(''))
 }
 
-function createUpcomingEntry (consultation) {
+function createUpcomingEntry(consultation) {
   const content = []
 
   const consultationDate = new Date(consultation.Date) // Convert the consultation date to a Date object
@@ -37,7 +37,7 @@ function createUpcomingEntry (consultation) {
   return content.join('')
 }
 
-function redirectToGoogleCalendar (eventDescription, personName, eventDate, eventStartTime, eventDuration) {
+function redirectToGoogleCalendar(eventDescription, personName, eventDate, eventStartTime, eventDuration) {
   // Convert the date and time inputs to the required format
   const eventDateTime = new Date(eventDate + 'T' + eventStartTime)
   const eventEndTime = new Date(eventDateTime.getTime() + (eventDuration * 60000)) // Event duration in minutes
@@ -66,7 +66,7 @@ function redirectToGoogleCalendar (eventDescription, personName, eventDate, even
   window.open(url, '_blank')
 }
 
-function deleteBooking (id) {
+function deleteBooking(id) {
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
@@ -82,7 +82,7 @@ function deleteBooking (id) {
 
 // Code to fetch and show all of the consultations the lecturer has created:
 
-function loadConsultations () {
+function loadConsultations() {
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
@@ -96,7 +96,7 @@ function loadConsultations () {
 
 loadConsultations()
 
-function populateUpcomingConsultations (consultations) {
+function populateUpcomingConsultations(consultations) {
   const content = []
   for (let i = 0; i < consultations.length; i++) {
     content.push(createConsulationEntry(consultations[i]))
@@ -104,7 +104,7 @@ function populateUpcomingConsultations (consultations) {
   $('#allConsultationsList').html(content.join(''))
 }
 
-function createConsulationEntry (event) {
+function createConsulationEntry(event) {
   const content = []
 
   const eventDate = new Date(event.StartDate)
@@ -120,7 +120,7 @@ function createConsulationEntry (event) {
   return content.join('')
 }
 
-function deleteEvent (id) {
+function deleteEvent(id) {
   $.ajax({
     type: 'POST',
     contentType: 'application/json',
